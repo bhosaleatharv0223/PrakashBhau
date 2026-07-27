@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoImg from "@/imports/logo.png";
 import heroImg from "@/imports/Hero_section.jpeg";
@@ -139,7 +139,7 @@ const achievements = [
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
+  const [navVariant, setNavVariant] = useState<"default" | "hidden" | "floating">("default");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
@@ -147,10 +147,57 @@ export default function App() {
     name: "", phone: "", email: "", queryType: "", message: "",
   });
 
+  const heroSectionRef = useRef<HTMLElement | null>(null);
+  const lastScrollYRef = useRef(0);
+  const tickingRef = useRef(false);
+  const navVariantRef = useRef<"default" | "hidden" | "floating">("default");
+
   useEffect(() => {
-    const onScroll = () => setIsScrolled(window.scrollY > 100);
-    window.addEventListener("scroll", onScroll);
-    return () => window.removeEventListener("scroll", onScroll);
+    const updateNavState = () => {
+      const currentY = window.scrollY;
+      const heroElement = heroSectionRef.current;
+      const heroBottom = heroElement ? heroElement.offsetTop + heroElement.offsetHeight : 0;
+
+      if (currentY + window.innerHeight < heroBottom - 24 || currentY < 24) {
+        if (navVariantRef.current !== "default") {
+          navVariantRef.current = "default";
+          setNavVariant("default");
+        }
+        lastScrollYRef.current = currentY;
+        return;
+      }
+
+      const delta = currentY - lastScrollYRef.current;
+      if (Math.abs(delta) <= 24) {
+        return;
+      }
+
+      const nextVariant = delta > 0 ? "hidden" : "floating";
+      if (navVariantRef.current !== nextVariant) {
+        navVariantRef.current = nextVariant;
+        setNavVariant(nextVariant);
+      }
+
+      lastScrollYRef.current = currentY;
+    };
+
+    const handleScroll = () => {
+      if (tickingRef.current) return;
+      tickingRef.current = true;
+      window.requestAnimationFrame(() => {
+        updateNavState();
+        tickingRef.current = false;
+      });
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    window.addEventListener("resize", handleScroll, { passive: true });
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("resize", handleScroll);
+    };
   }, []);
 
   const scrollTo = (id: string) => {
@@ -197,16 +244,31 @@ export default function App() {
       </div>
 
       {/* ── Sticky Navigation ── */}
-      <header className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-xl" : "bg-white/97 backdrop-blur-md shadow-sm"}`} style={{ borderBottom: "1px solid rgba(201,162,39,0.2)" }}>
-        <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+      <header
+        className={`w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
+          navVariant === "default"
+            ? "sticky top-0 bg-white/97 backdrop-blur-md shadow-sm"
+            : navVariant === "floating"
+              ? "sticky top-3 bg-transparent"
+              : "sticky top-0 pointer-events-none opacity-0 -translate-y-6"
+        }`}
+        style={{ borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
+      >
+        <nav className={`mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu ${
+          navVariant === "floating"
+            ? "max-w-5xl rounded-full border border-[#C9A227]/15 bg-white/95 shadow-[0_20px_50px_rgba(36,28,26,0.16)] backdrop-blur-xl"
+            : "max-w-7xl rounded-none"
+        }`}>
           {/* Logo */}
-          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3 flex-shrink-0 group">
-            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 transition-transform group-hover:scale-105" style={{ border: "2.5px solid #E8622C", boxShadow: "0 0 0 3px rgba(201,162,39,0.25)" }}>
+          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3 sm:gap-4 md:gap-5 flex-shrink-0 group mr-2 sm:mr-3 lg:mr-6 min-h-[48px] py-1">
+            <div className="w-16 h-16 sm:w-[4.4rem] sm:h-[4.4rem] rounded-full overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:scale-105" style={{ border: "3.25px solid #E8622C", boxShadow: "0 0 0 4px rgba(201,162,39,0.24), 0 14px 32px rgba(92,17,25,0.16)" }}>
               <ImageWithFallback src={logoImg} alt="Guruvarya Shri Prakashbhau Shinde" className="w-full h-full object-cover" />
             </div>
-            <div className="hidden sm:block text-left leading-tight">
-              <div className="font-bold text-[#5C1119] text-sm" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>गुरुवर्य</div>
-              <div className="text-[#241C1A]/60 text-xs tracking-wide" style={{ fontFamily: "'Cinzel', serif" }}>Prakashbhau Shinde</div>
+            <div className="flex items-center text-left leading-tight min-w-0">
+              <div className="flex flex-col">
+                <div className="font-black text-[#5C1119] text-[1rem] sm:text-[1.1rem] tracking-[0.16em]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>गुरुवर्य</div>
+                <div className="text-[#241C1A]/75 text-[0.72rem] sm:text-[0.78rem] md:text-[0.84rem] font-semibold uppercase tracking-[0.3em] whitespace-nowrap" style={{ fontFamily: "'Cinzel', serif" }}>Prakashbhau Shinde</div>
+              </div>
             </div>
           </button>
 
@@ -267,7 +329,7 @@ export default function App() {
       </header>
 
       {/* ── Hero Section ── */}
-      <section id="hero" className="relative min-h-[92vh] flex items-center overflow-hidden">
+      <section ref={heroSectionRef} id="hero" className="relative min-h-[92vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <ImageWithFallback
             src={heroImg}
