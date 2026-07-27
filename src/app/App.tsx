@@ -17,16 +17,16 @@ const TRUST_WEBSITE = "https://sarvatmakmaharudra.org";
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 const mahavidyas = [
-  { name: "Kali", devanagari: "काली", meaning: "Destroyer of ego and time — the fierce Mother beyond all form" },
-  { name: "Tara", devanagari: "तारा", meaning: "The compassionate saviour — guide through darkness and the unknown" },
-  { name: "Tripura Sundari", devanagari: "त्रिपुरसुंदरी", meaning: "Beauty of all three worlds — grace, perfection, and cosmic love" },
+  { name: "Kali", devanagari: "काली", meaning: "Destroyer of ego and time — the fierce Mother beyond all form", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.31 PM (1).jpeg" },
+  { name: "Tara", devanagari: "तारा", meaning: "The compassionate saviour — guide through darkness and the unknown", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.31 PM.jpeg" },
+  { name: "Tripura Sundari", devanagari: "त्रिपुरसुंदरी", meaning: "Beauty of all three worlds — grace, perfection, and cosmic love", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.30 PM.jpeg" },
   { name: "Bhuvaneshwari", devanagari: "भुवनेश्वरी", meaning: "Queen of the universe — sovereign of infinite space and creation" },
-  { name: "Bhairavi", devanagari: "भैरवी", meaning: "The fierce one — dissolution, transformation, and inner fire" },
-  { name: "Chinnamasta", devanagari: "छिन्नमस्ता", meaning: "The self-decapitated — radical self-sacrifice and transcendence" },
-  { name: "Dhumavati", devanagari: "धूमावती", meaning: "The smoky widow — renunciation, solitude, and void-consciousness" },
-  { name: "Bagalamukhi", devanagari: "बगलामुखी", meaning: "The paralyser — victory over adversaries, speech, and falsehood" },
-  { name: "Matangi", devanagari: "मातंगी", meaning: "The outcaste goddess — divine wisdom, music, and eloquent speech" },
-  { name: "Kamalatmika", devanagari: "कमलात्मिका", meaning: "The lotus goddess — abundance, purity, and spiritual fulfilment" },
+  { name: "Bhairavi", devanagari: "भैरवी", meaning: "The fierce one — dissolution, transformation, and inner fire", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.32 PM (1).jpeg" },
+  { name: "Chinnamasta", devanagari: "छिन्नमस्ता", meaning: "The self-decapitated — radical self-sacrifice and transcendence", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.32 PM.jpeg" },
+  { name: "Dhumavati", devanagari: "धूमावती", meaning: "The smoky widow — renunciation, solitude, and void-consciousness", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.33 PM (1).jpeg" },
+  { name: "Bagalamukhi", devanagari: "बगलामुखी", meaning: "The paralyser — victory over adversaries, speech, and falsehood", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.30 PM (1).jpeg" },
+  { name: "Matangi", devanagari: "मातंगी", meaning: "The outcaste goddess — divine wisdom, music, and eloquent speech", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.33 PM.jpeg" },
+  { name: "Kamalatmika", devanagari: "कमलात्मिका", meaning: "The lotus goddess — abundance, purity, and spiritual fulfilment", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.34 PM.jpeg" },
 ];
 
 const timeline = [
@@ -578,17 +578,27 @@ export default function App() {
               {mahavidyas.map((m, i) => (
                 <div
                   key={i}
-                  className="rounded-2xl p-5 text-center transition-all duration-200 group cursor-default"
-                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.18)" }}
-                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(201,162,39,0.1)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.5)"; }}
-                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.04)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.18)"; }}
+                  className="mahavidya-card"
                 >
-                  <div className="w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-3 transition-colors" style={{ background: "rgba(201,162,39,0.18)" }}>
-                    <span className="text-[#C9A227] font-bold text-sm" style={{ fontFamily: "'Cinzel', serif" }}>{i + 1}</span>
+                  <div className="mahavidya-figure">
+                    {m.image ? (
+                      <div className="mahavidya-avatar">
+                        <ImageWithFallback
+                          src={m.image}
+                          alt={`${m.name} goddess`}
+                          className="mahavidya-image"
+                        />
+                      </div>
+                    ) : (
+                      <div className="mahavidya-avatar mahavidya-placeholder">
+                        <span>ॐ</span>
+                      </div>
+                    )}
                   </div>
+                  <div className="mahavidya-badge">{i + 1}</div>
                   <div className="text-[#C9A227] font-bold text-sm mb-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{m.devanagari}</div>
-                  <div className="text-white text-xs font-semibold mb-2" style={{ fontFamily: "'Cinzel', serif" }}>{m.name}</div>
-                  <p className="text-white/45 text-[11px] leading-relaxed hidden sm:block">{m.meaning}</p>
+                  <div className="text-white text-xs font-semibold mb-2" style={{ fontFamily: "'Cinzel', serif", letterSpacing: "0.08em", textTransform: "uppercase" }}>{m.name}</div>
+                  <p className="mahavidya-meaning">{m.meaning}</p>
                 </div>
               ))}
             </div>
