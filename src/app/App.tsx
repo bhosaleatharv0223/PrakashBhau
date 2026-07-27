@@ -1,0 +1,1041 @@
+import { useState, useEffect } from "react";
+import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
+import logoImg from "@/imports/logo.png";
+import heroImg from "@/imports/Hero_section.jpeg";
+import {
+  Phone, MessageCircle, Menu, X, ChevronDown,
+  Star, Award, Users, Heart, BookOpen,
+  MapPin, Mail, ChevronRight, Quote,
+  Globe, ExternalLink, Sparkles, Sun, Zap,
+} from "lucide-react";
+
+const PHONE = "9960227894";
+const WHATSAPP_LINK = `https://wa.me/91${PHONE}`;
+const TRUST_WEBSITE = "https://sarvatmakmaharudra.org";
+
+// ─── Data ─────────────────────────────────────────────────────────────────────
+
+const mahavidyas = [
+  { name: "Kali", devanagari: "काली", meaning: "Destroyer of ego and time — the fierce Mother beyond all form" },
+  { name: "Tara", devanagari: "तारा", meaning: "The compassionate saviour — guide through darkness and the unknown" },
+  { name: "Tripura Sundari", devanagari: "त्रिपुरसुंदरी", meaning: "Beauty of all three worlds — grace, perfection, and cosmic love" },
+  { name: "Bhuvaneshwari", devanagari: "भुवनेश्वरी", meaning: "Queen of the universe — sovereign of infinite space and creation" },
+  { name: "Bhairavi", devanagari: "भैरवी", meaning: "The fierce one — dissolution, transformation, and inner fire" },
+  { name: "Chinnamasta", devanagari: "छिन्नमस्ता", meaning: "The self-decapitated — radical self-sacrifice and transcendence" },
+  { name: "Dhumavati", devanagari: "धूमावती", meaning: "The smoky widow — renunciation, solitude, and void-consciousness" },
+  { name: "Bagalamukhi", devanagari: "बगलामुखी", meaning: "The paralyser — victory over adversaries, speech, and falsehood" },
+  { name: "Matangi", devanagari: "मातंगी", meaning: "The outcaste goddess — divine wisdom, music, and eloquent speech" },
+  { name: "Kamalatmika", devanagari: "कमलात्मिका", meaning: "The lotus goddess — abundance, purity, and spiritual fulfilment" },
+];
+
+const timeline = [
+  { year: "2010", title: "The Divine Call Begins", desc: "Commenced intense Hanuman tapasya under the guidance of revered saints — surrendering completely to Lord Shri Hanuman in a journey of absolute devotion." },
+  { year: "2012", title: "Grace of Dasha Mahavidya", desc: "Received the extraordinary divine grace of all ten Mahavidyas — a rare and supreme blessing acknowledged by saints, scholars, and spiritual masters." },
+  { year: "2015", title: "Sarvatmak Maharudra Parivar Trust", desc: "Founded the registered charitable trust (Reg. E0009721(PUN)) — extending spiritual mission into education, healthcare, and humanitarian service." },
+  { year: "2018", title: "Doctorate in Spiritual Education", desc: "Awarded a Doctorate in Spiritual Education — formal recognition of 14+ years of rigorous sadhana, study, and transformative guidance of thousands." },
+  { year: "2020", title: "Consecrated as Mathadhipati", desc: "Accepted the sacred responsibility of Mathadhipati — head of the Math — guiding the spiritual community with wisdom, authority, and compassion." },
+  { year: "Present", title: "The Mission Continues", desc: "Guiding devotees across Maharashtra and beyond through astrology, counselling, Hanuman Upasana, Dasha Mahavidya sadhana, and sustained social service." },
+];
+
+const services = [
+  {
+    Icon: Star,
+    title: "Astrology Consultation",
+    devanagari: "ज्योतिष सल्ला",
+    desc: "Vedic Kundali analysis and horoscope reading — precise, compassionate guidance on marriage, career, finance, and health grounded in ancient Jyotish tradition.",
+    cta: "Book Astrology Session",
+  },
+  {
+    Icon: Heart,
+    title: "Spiritual Counselling",
+    devanagari: "आध्यात्मिक समुपदेशन",
+    desc: "Restore mental peace, family harmony, and inner clarity through spiritually-rooted personal counselling that addresses the root of suffering, not just its symptoms.",
+    cta: "Seek Guidance",
+  },
+  {
+    Icon: Zap,
+    title: "Hanuman Upasana",
+    devanagari: "हनुमान उपासना",
+    desc: "Authentic worship guidance, mantra initiation, and sadhana techniques drawn directly from 14 years of unbroken tapasya at the feet of Lord Shri Hanuman.",
+    cta: "Begin Upasana",
+  },
+  {
+    Icon: Sparkles,
+    title: "Dasha Mahavidya Sadhana",
+    devanagari: "दश महाविद्या साधना",
+    desc: "Advanced tantric sadhana guidance under the living blessings of all ten Mahavidyas — offered only to sincere and committed spiritual seekers.",
+    cta: "Explore Sadhana",
+  },
+  {
+    Icon: Sun,
+    title: "Personal Blessings",
+    devanagari: "आशीर्वाद दर्शन",
+    desc: "Receive individual Ashirwad — personal blessings, divine protection, and direct guidance in a one-on-one darshan session with Guruvarya.",
+    cta: "Request Darshan",
+  },
+  {
+    Icon: BookOpen,
+    title: "Pravachan & Discourses",
+    devanagari: "प्रवचन व सत्संग",
+    desc: "Attend spiritual workshops, satsang gatherings, and public discourses on dharma, devotion, and conscious living — open to all sincere seekers.",
+    cta: "View Upcoming Events",
+  },
+];
+
+const socialWorks = [
+  { Icon: BookOpen, title: "Kids Education Support", desc: "Sponsoring schoolbooks, uniforms, and fees for underprivileged children across rural Maharashtra — because every child deserves to learn." },
+  { Icon: Heart, title: "Healthcare Support", desc: "Free medical camps, essential medicines, and health check-up drives — bringing medical care to those who cannot afford it." },
+  { Icon: Globe, title: "Gaushala & Animal Welfare", desc: "Care, shelter, and protection of cows and abandoned animals — Gau Seva as a sacred act of divine service." },
+  { Icon: Award, title: "Blood Donation Club", desc: "Organising regular blood donation camps across communities — saving hundreds of lives through voluntary, conscious giving." },
+  { Icon: Users, title: "Women's Safety & Education", desc: "Awareness programs, self-defence workshops, and educational support — empowering women to live with dignity, safety, and agency." },
+  { Icon: Star, title: "Humanitarian Relief", desc: "Emergency support during floods, droughts, and crises — food, clothing, and shelter drives when communities need it most." },
+];
+
+const impactNumbers = [
+  { number: "2K+", label: "Education Support", sub: "शैक्षणिक सहाय्य" },
+  { number: "5K+", label: "Health Support", sub: "आरोग्य सेवा" },
+  { number: "10K+", label: "Social Support", sub: "सामाजिक सहाय्य" },
+  { number: "50+", label: "Volunteers", sub: "स्वयंसेवक" },
+];
+
+const testimonials = [
+  {
+    name: "Suresh Patil",
+    location: "Pune",
+    text: "Guruvarya's Kundali analysis was remarkably accurate. His guidance helped me navigate a critical career decision with clarity and confidence. The session felt like receiving wisdom from a genuine seer, not merely a practitioner.",
+    stars: 5,
+  },
+  {
+    name: "Anjali Deshmukh",
+    location: "Nashik",
+    text: "After years of family discord, a single counselling session with Guruvarya brought a peace I had not known in a decade. His spiritual wisdom reaches where ordinary words cannot. We are forever grateful.",
+    stars: 5,
+  },
+  {
+    name: "Rajendra Kadam",
+    location: "Mumbai",
+    text: "The Hanuman Upasana guidance I received completely transformed my morning practice. The mantras he shared and the depth of his explanation opened something profound within me. Jai Shri Ram.",
+    stars: 5,
+  },
+];
+
+const faqs = [
+  { q: "How do I book a consultation with Guruvarya?", a: "You may book through the 'Book Consultation' button on this page, call 9960227894 directly, or reach out via WhatsApp. We will confirm your appointment within 24 hours." },
+  { q: "Are online consultations available?", a: "Yes. Online consultations are offered via phone or video call for devotees unable to visit in person. Both astrology and spiritual counselling sessions are available remotely." },
+  { q: "What details are required for Kundali analysis?", a: "Please provide your full name, date of birth, exact time of birth, and place of birth. A copy of your birth certificate or hospital record is helpful if the birth time is uncertain." },
+  { q: "How long has Guruvarya been in spiritual practice?", a: "Guruvarya has devoted over 14 years to the intense worship of Lord Shri Hanuman. He received the grace of all ten Dasha Mahavidyas and holds a Doctorate in Spiritual Education." },
+  { q: "Is Sarvatmak Maharudra Parivar Trust a registered organisation?", a: "Yes. Sarvatmak Maharudra Parivar Trust is a government-registered charitable trust, Registration Number E0009721(PUN). All activities are conducted with full legal and financial transparency." },
+  { q: "How can I contribute to the Trust's social work?", a: "You are welcome to volunteer, donate, or sponsor specific initiatives. Please visit sarvatmakmaharudra.org or contact the trust directly for contribution details and bank information." },
+];
+
+const achievements = [
+  { icon: "🎓", title: "Doctorate in Spiritual Education", desc: "Formal academic recognition of over a decade of rigorous spiritual study, sadhana, and the guidance of thousands of devotees.", year: "2018" },
+  { icon: "🏛️", title: "Mathadhipati", desc: "Consecrated as the highest guiding authority of the Math — entrusted with the spiritual welfare and upliftment of a growing community.", year: "2020" },
+  { icon: "🌺", title: "Dasha Mahavidya Grace", desc: "Rare and verified blessing of all ten Mahavidyas — recognised and affirmed by renowned saints, scholars, and spiritual leaders.", year: "2012" },
+  { icon: "🤝", title: "Social Reformer & Spiritual Leader", desc: "Recognised by dignitaries, community leaders, and government representatives for outstanding contribution to social welfare and spiritual guidance.", year: "Ongoing" },
+];
+
+// ─── App ───────────────────────────────────────────────────────────────────────
+
+export default function App() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isBookingOpen, setIsBookingOpen] = useState(false);
+  const [activeFaq, setActiveFaq] = useState<number | null>(null);
+  const [formSubmitted, setFormSubmitted] = useState(false);
+  const [bookingForm, setBookingForm] = useState({
+    name: "", phone: "", email: "", queryType: "", message: "",
+  });
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 100);
+    window.addEventListener("scroll", onScroll);
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  const scrollTo = (id: string) => {
+    document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
+    setIsMenuOpen(false);
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormSubmitted(true);
+    setTimeout(() => {
+      setFormSubmitted(false);
+      setIsBookingOpen(false);
+      setBookingForm({ name: "", phone: "", email: "", queryType: "", message: "" });
+    }, 3500);
+  };
+
+  const navLinks = [
+    { label: "Who I Am", id: "who-i-am" },
+    { label: "What I Think", id: "what-i-think" },
+    { label: "What I Do", id: "what-i-do" },
+  ];
+
+  return (
+    <div className="min-h-screen bg-[#FBF3E7] text-[#241C1A]" style={{ fontFamily: "'Poppins', sans-serif" }}>
+
+      {/* ── Announcement Bar ── */}
+      <div className="bg-[#5C1119] text-white py-2 px-4">
+        <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 flex-wrap text-xs sm:text-sm">
+          <span className="text-[#C9A227] hidden sm:inline" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>ॐ ॥ जय श्री राम ॥ ॐ</span>
+          <span className="flex-1 text-center text-white/80">
+            <span className="text-[#C9A227]"> • </span>
+            14 वर्षांची श्री हनुमान उपासना
+            <span className="text-[#C9A227]"> • </span>
+            दश महाविद्याग्राही
+            <span className="text-[#C9A227]"> • </span>
+            सर्वात्मक महारुद्र परिवार ट्रस्ट
+            <span className="text-[#C9A227]"> • </span>
+          </span>
+          <a href={`tel:${PHONE}`} className="flex items-center gap-1.5 text-[#C9A227] font-bold hover:text-white transition-colors whitespace-nowrap" style={{ fontFamily: "'Cinzel', serif" }}>
+            <Phone className="w-3 h-3" /> {PHONE}
+          </a>
+        </div>
+      </div>
+
+      {/* ── Sticky Navigation ── */}
+      <header className={`sticky top-0 z-50 transition-all duration-300 ${isScrolled ? "bg-white shadow-xl" : "bg-white/97 backdrop-blur-md shadow-sm"}`} style={{ borderBottom: "1px solid rgba(201,162,39,0.2)" }}>
+        <nav className="max-w-7xl mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4">
+          {/* Logo */}
+          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3 flex-shrink-0 group">
+            <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0 transition-transform group-hover:scale-105" style={{ border: "2.5px solid #E8622C", boxShadow: "0 0 0 3px rgba(201,162,39,0.25)" }}>
+              <ImageWithFallback src={logoImg} alt="Guruvarya Shri Prakashbhau Shinde" className="w-full h-full object-cover" />
+            </div>
+            <div className="hidden sm:block text-left leading-tight">
+              <div className="font-bold text-[#5C1119] text-sm" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>गुरुवर्य</div>
+              <div className="text-[#241C1A]/60 text-xs tracking-wide" style={{ fontFamily: "'Cinzel', serif" }}>Prakashbhau Shinde</div>
+            </div>
+          </button>
+
+          {/* Desktop Nav Links */}
+          <div className="hidden lg:flex items-center gap-1">
+            {navLinks.map((item) => (
+              <button
+                key={item.id}
+                onClick={() => scrollTo(item.id)}
+                className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
+                style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent"; }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+
+          {/* Right Actions */}
+          <div className="hidden lg:flex items-center gap-4">
+            <a href={`tel:${PHONE}`} className="flex items-center gap-1.5 text-sm font-medium text-[#5C1119] hover:text-[#E8622C] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>
+              <Phone className="w-4 h-4" /> {PHONE}
+            </a>
+            <button
+              onClick={() => setIsBookingOpen(true)}
+              className="px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all duration-200 shadow-md hover:shadow-xl tracking-wider"
+              style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 4px 15px rgba(232,98,44,0.35)" }}
+            >
+              Book Consultation
+            </button>
+          </div>
+
+          {/* Mobile Hamburger */}
+          <button className="lg:hidden p-2 text-[#5C1119]" onClick={() => setIsMenuOpen(!isMenuOpen)}>
+            {isMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+          </button>
+        </nav>
+
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="lg:hidden bg-white px-4 py-4 space-y-1" style={{ borderTop: "1px solid rgba(201,162,39,0.2)" }}>
+            {navLinks.map((item) => (
+              <button key={item.id} onClick={() => scrollTo(item.id)} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                {item.label}
+              </button>
+            ))}
+            <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(201,162,39,0.2)" }}>
+              <a href={`tel:${PHONE}`} className="flex items-center gap-2 px-4 py-3 text-[#5C1119] font-medium" style={{ fontFamily: "'Cinzel', serif" }}>
+                <Phone className="w-4 h-4" /> {PHONE}
+              </a>
+              <button onClick={() => { setIsBookingOpen(true); setIsMenuOpen(false); }} className="w-full py-3.5 text-white font-bold rounded-xl tracking-wider" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)" }}>
+                Book Consultation
+              </button>
+            </div>
+          </div>
+        )}
+      </header>
+
+      {/* ── Hero Section ── */}
+      <section id="hero" className="relative min-h-[92vh] flex items-center overflow-hidden">
+        <div className="absolute inset-0">
+          <ImageWithFallback
+            src={heroImg}
+            alt="Sarvatmak Maharudra Parivar Trust — Guruvarya Shri Prakashbhau Shinde with revered saints and dignitaries"
+            className="w-full h-full object-cover object-center"
+          />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(92,17,25,0.97) 0%, rgba(92,17,25,0.88) 45%, rgba(58,11,16,0.65) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(58,11,16,0.85) 0%, transparent 50%)" }} />
+        </div>
+
+        {/* Decorative Om watermark */}
+        <div className="absolute right-4 top-1/2 -translate-y-1/2 select-none pointer-events-none hidden xl:block" style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: "22rem", lineHeight: 1, color: "rgba(201,162,39,0.05)", fontWeight: 700 }}>
+          ॐ
+        </div>
+
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-16 w-full">
+          <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+
+            {/* Left — Content */}
+            <div className="text-white space-y-7">
+              <div className="flex items-center gap-3">
+                <span className="w-10 h-px bg-[#C9A227]" />
+                <span className="text-[#C9A227] text-base tracking-[0.2em]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>॥ जय श्री राम ॥</span>
+                <span className="w-10 h-px bg-[#C9A227]" />
+              </div>
+
+              <div>
+                <h1 className="font-bold text-white leading-tight" style={{ fontFamily: "'Noto Serif Devanagari', serif", fontSize: "clamp(2rem, 5vw, 3.5rem)" }}>
+                  गुरुवर्य श्री
+                  <br />
+                  <span style={{ color: "#E8622C" }}>प्रकाशभाऊ शिंदे</span>
+                </h1>
+                <p className="text-lg mt-2 font-semibold" style={{ fontFamily: "'Noto Serif Devanagari', serif", color: "#C9A227" }}>
+                  (मठाधीपती)
+                </p>
+              </div>
+
+              <div className="flex flex-wrap gap-2">
+                {["Spiritual Guru", "Hanuman Upasak", "Astrologer", "Spiritual Counsellor"].map(tag => (
+                  <span key={tag} className="px-3.5 py-1 text-[#C9A227] text-xs font-medium tracking-wider rounded-full" style={{ fontFamily: "'Cinzel', serif", border: "1px solid rgba(201,162,39,0.45)" }}>
+                    {tag}
+                  </span>
+                ))}
+              </div>
+
+              <p className="text-white/82 leading-loose text-base" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+                १४ वर्षांची श्री हनुमान तपस्या आणि दश महाविद्या कृपेने धन्य झालेले,
+                आध्यात्मिक मार्गदर्शक, ज्योतिषी आणि सामाजिक कार्यकर्ते।
+              </p>
+
+              <div className="flex flex-wrap gap-3 pt-1">
+                <button
+                  onClick={() => setIsBookingOpen(true)}
+                  className="flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-xl transition-all duration-200 text-sm tracking-wider"
+                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 6px 20px rgba(232,98,44,0.4)" }}
+                >
+                  <Phone className="w-4 h-4" /> Book Consultation
+                </button>
+                <button
+                  onClick={() => scrollTo("what-i-do")}
+                  className="px-7 py-3.5 font-bold rounded-xl transition-all duration-200 text-sm tracking-wider hover:bg-[#C9A227] hover:text-[#5C1119]"
+                  style={{ fontFamily: "'Cinzel', serif", border: "2px solid #C9A227", color: "#C9A227" }}
+                >
+                  Our Services
+                </button>
+                <a
+                  href={WHATSAPP_LINK}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex items-center gap-2 px-7 py-3.5 font-semibold rounded-xl transition-all duration-200 text-sm hover:bg-white/10"
+                  style={{ fontFamily: "'Cinzel', serif", border: "2px solid rgba(255,255,255,0.25)", color: "white" }}
+                >
+                  <MessageCircle className="w-4 h-4" /> WhatsApp
+                </a>
+              </div>
+            </div>
+
+            {/* Right — Portrait */}
+            <div className="flex justify-center lg:justify-end">
+              <div className="relative">
+                {/* Outer glow ring */}
+                <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%)", transform: "scale(1.3)" }} />
+                <div
+                  className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[380px] lg:h-[380px] rounded-full overflow-hidden shadow-2xl"
+                  style={{ border: "4px solid #C9A227", boxShadow: "0 0 0 8px rgba(201,162,39,0.18), 0 30px 80px rgba(0,0,0,0.5)" }}
+                >
+                  <ImageWithFallback
+                    src={logoImg}
+                    alt="Guruvarya Shri Prakashbhau Shinde — Mathadhipati"
+                    className="w-full h-full object-cover"
+                  />
+                </div>
+                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-xl whitespace-nowrap text-xs font-bold tracking-[0.25em]" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #C9A227, #A87D10)", color: "#3A0B10" }}>
+                  MATHADHIPATI
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Trust Badge Strip ── */}
+      <section className="bg-white py-8" style={{ borderBottom: "1px solid rgba(201,162,39,0.25)", borderTop: "1px solid rgba(201,162,39,0.25)" }}>
+        <div className="max-w-6xl mx-auto px-4">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+            {[
+              { icon: "🙏", num: "14+", label: "Years of Tapasya", sub: "हनुमान उपासना" },
+              { icon: "🎓", num: "Ph.D.", label: "Spiritual Education", sub: "आध्यात्मिक शिक्षण" },
+              { icon: "🏛️", num: "Mathadhipati", label: "Math Heading", sub: "मठाधीपती" },
+              { icon: "🌺", num: "10", label: "Dasha Mahavidyas", sub: "दश महाविद्या" },
+            ].map((b, i) => (
+              <div key={i} className="text-center group py-2">
+                <div className="text-3xl mb-2">{b.icon}</div>
+                <div className="text-xl font-bold text-[#5C1119] group-hover:text-[#E8622C] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>{b.num}</div>
+                <div className="text-xs font-semibold text-[#241C1A] mt-0.5">{b.label}</div>
+                <div className="text-xs text-[#241C1A]/55 mt-0.5" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{b.sub}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────── */}
+      {/* WHO I AM                                        */}
+      {/* ──────────────────────────────────────────────── */}
+      <section id="who-i-am" className="bg-[#5C1119] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+          {/* Section header */}
+          <div className="text-center mb-20">
+            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>DISCOVER THE GURUVARYA</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-5" style={{ fontFamily: "'Cinzel', serif" }}>Who I Am</h2>
+            <div className="flex items-center justify-center gap-4">
+              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="text-[#C9A227] text-xl" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>मी कोण आहे</span>
+              <span className="w-16 h-px bg-[#C9A227]" />
+            </div>
+          </div>
+
+          {/* Biography */}
+          <div className="grid lg:grid-cols-5 gap-12 items-start mb-24">
+            <div className="lg:col-span-2 flex justify-center">
+              <div className="relative">
+                <div className="w-64 h-64 rounded-full overflow-hidden shadow-2xl" style={{ border: "4px solid #C9A227", boxShadow: "0 0 0 6px rgba(201,162,39,0.15)" }}>
+                  <ImageWithFallback src={logoImg} alt="Guruvarya Shri Prakashbhau Shinde" className="w-full h-full object-cover" />
+                </div>
+                <div className="absolute -bottom-4 -right-4 w-16 h-16 rounded-full flex items-center justify-center shadow-xl" style={{ background: "linear-gradient(135deg, #C9A227, #A87D10)" }}>
+                  <span className="text-[#3A0B10] text-2xl font-bold" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>ॐ</span>
+                </div>
+              </div>
+            </div>
+            <div className="lg:col-span-3 space-y-6">
+              <h3 className="text-2xl font-bold text-[#C9A227]" style={{ fontFamily: "'Cinzel', serif" }}>A Life Surrendered to the Divine</h3>
+              <p className="text-white/82 leading-8 text-base">
+                Guruvarya Shri Prakashbhau Shinde (Mathadhipati) has dedicated over{" "}
+                <span className="text-[#C9A227] font-semibold">14 years</span> to the intense worship and tapasya of Lord Shri Hanuman — a journey of absolute surrender, rigorous sadhana, and unbroken devotion that has made him a spiritual beacon for thousands across Maharashtra and beyond.
+              </p>
+              <p className="text-white/82 leading-8 text-base">
+                He is regarded as blessed with the grace of the{" "}
+                <span className="text-[#C9A227] font-semibold">Dasha Mahavidya</span> — the ten supreme tantric manifestations of the Goddess — a distinction acknowledged by revered saints, scholars, and spiritual masters. He holds a{" "}
+                <span className="text-[#C9A227] font-semibold">Doctorate in Spiritual Education</span> and serves as{" "}
+                <span className="text-[#C9A227] font-semibold">Mathadhipati</span>, guiding his Math and devotees with wisdom, authority, and boundless compassion.
+              </p>
+              <p className="text-white/82 leading-8 text-base">
+                As the founding force behind{" "}
+                <span className="text-[#C9A227] font-semibold">Sarvatmak Maharudra Parivar Trust</span>{" "}
+                (Reg. No. E0009721(PUN)), he has extended his mission into education, healthcare, and humanitarian service — because for him, true devotion must always translate into seva.
+              </p>
+              <blockquote className="mt-4 px-6 py-4 rounded-xl" style={{ border: "1px solid rgba(201,162,39,0.35)", background: "rgba(201,162,39,0.05)" }}>
+                <p className="text-[#C9A227] italic text-sm leading-relaxed" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+                  "श्रद्धा आणि साबुरी — हीच माझ्या जीवनाची आणि उपासनेची शिकवण आहे।"
+                </p>
+              </blockquote>
+            </div>
+          </div>
+
+          {/* Spiritual Journey Timeline */}
+          <div className="mb-24">
+            <h3 className="text-2xl font-bold text-center text-[#C9A227] mb-14" style={{ fontFamily: "'Cinzel', serif" }}>The Spiritual Journey</h3>
+            <div className="relative space-y-6">
+              <div className="absolute left-[4.5rem] top-0 bottom-0 w-px hidden md:block" style={{ background: "linear-gradient(to bottom, transparent, rgba(201,162,39,0.4), rgba(201,162,39,0.4), transparent)" }} />
+              {timeline.map((item, i) => (
+                <div key={i} className="flex gap-6 items-start group">
+                  <div className="flex-shrink-0 flex flex-col items-center gap-1 w-16">
+                    <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold z-10 flex-shrink-0 shadow-lg transition-all duration-200 group-hover:scale-110" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #C9A227, #A87D10)", color: "#3A0B10" }}>
+                      {i + 1}
+                    </div>
+                    <span className="text-[#C9A227]/70 text-[10px] font-bold tracking-wide text-center" style={{ fontFamily: "'Cinzel', serif" }}>{item.year}</span>
+                  </div>
+                  <div className="flex-1 rounded-2xl p-6 transition-all duration-200 group-hover:bg-white/8" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.18)" }}>
+                    <h4 className="font-bold text-white text-base mb-2 group-hover:text-[#C9A227] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>{item.title}</h4>
+                    <p className="text-white/65 text-sm leading-7">{item.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Dasha Mahavidya */}
+          <div>
+            <div className="text-center mb-12">
+              <h3 className="text-2xl font-bold text-[#C9A227] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Blessed by the Dasha Mahavidya</h3>
+              <p className="text-white/55 text-lg" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>दश महाविद्या कृपा</p>
+              <p className="text-white/50 text-sm mt-3 max-w-2xl mx-auto leading-7">
+                Guruvarya is blessed with the living grace of all ten Mahavidyas — the supreme tantric manifestations of the Divine Mother, each governing a distinct cosmic principle and force.
+              </p>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
+              {mahavidyas.map((m, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl p-5 text-center transition-all duration-200 group cursor-default"
+                  style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.18)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(201,162,39,0.1)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.5)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.04)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.18)"; }}
+                >
+                  <div className="w-9 h-9 rounded-full flex items-center justify-center mx-auto mb-3 transition-colors" style={{ background: "rgba(201,162,39,0.18)" }}>
+                    <span className="text-[#C9A227] font-bold text-sm" style={{ fontFamily: "'Cinzel', serif" }}>{i + 1}</span>
+                  </div>
+                  <div className="text-[#C9A227] font-bold text-sm mb-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{m.devanagari}</div>
+                  <div className="text-white text-xs font-semibold mb-2" style={{ fontFamily: "'Cinzel', serif" }}>{m.name}</div>
+                  <p className="text-white/45 text-[11px] leading-relaxed hidden sm:block">{m.meaning}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────── */}
+      {/* WHAT I THINK                                    */}
+      {/* ──────────────────────────────────────────────── */}
+      <section id="what-i-think" className="bg-[#FBF3E7] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+          {/* Section header */}
+          <div className="text-center mb-20">
+            <p className="text-[#E8622C]/80 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>PHILOSOPHY & WISDOM</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-[#5C1119] mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What I Think</h2>
+            <div className="flex items-center justify-center gap-4">
+              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="text-[#5C1119] text-xl" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>माझे विचार</span>
+              <span className="w-16 h-px bg-[#C9A227]" />
+            </div>
+          </div>
+
+          {/* Hero quote */}
+          <div className="rounded-3xl p-10 sm:p-16 mb-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #5C1119, #3A0B10)" }}>
+            <div className="absolute top-6 left-8 select-none pointer-events-none" style={{ fontFamily: "Georgia, serif", fontSize: "10rem", lineHeight: 1, color: "rgba(201,162,39,0.08)", fontWeight: 700 }}>
+              "
+            </div>
+            <div className="relative z-10 text-center max-w-3xl mx-auto">
+              <p className="text-white text-2xl sm:text-3xl leading-loose mb-5" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+                आत्मा परमात्म्याचे प्रतिबिंब आहे।<br />
+                स्वतःला ओळखा — ईश्वराला ओळखा।
+              </p>
+              <p className="text-lg mb-6 italic leading-relaxed" style={{ fontFamily: "'Libre Baskerville', Georgia, serif", color: "#C9A227" }}>
+                "The soul is a mirror of the Supreme.<br />Know yourself — and you shall know God."
+              </p>
+              <p className="text-white/50 text-sm tracking-widest" style={{ fontFamily: "'Cinzel', serif" }}>
+                — Guruvarya Shri Prakashbhau Shinde (Mathadhipati)
+              </p>
+            </div>
+          </div>
+
+          {/* Teachings */}
+          <div className="grid md:grid-cols-3 gap-7 mb-16">
+            {[
+              {
+                devanagari: "श्रद्धा आणि साबुरी हे भक्तीचे दोन पाय आहेत।",
+                english: "Faith and patience are the two sacred feet of devotion.",
+                context: "On the path of bhakti — true worship demands not speed, but steadiness."
+              },
+              {
+                devanagari: "सेवा हीच सच्ची पूजा आहे।",
+                english: "Service to humanity is the truest form of worship.",
+                context: "No ritual or mantra equals the merit of one sincere act of selfless service."
+              },
+              {
+                devanagari: "दुसऱ्याच्या वेदनेत ईश्वर दिसतो — तिथेच खरी भक्ती आहे।",
+                english: "God is seen in the suffering of another — therein lies true devotion.",
+                context: "Compassion is not a virtue added to spirituality — it is its very heart."
+              },
+            ].map((t, i) => (
+              <div key={i} className="bg-white rounded-2xl p-8 shadow-sm hover:shadow-md transition-all duration-200 group" style={{ border: "1px solid rgba(201,162,39,0.2)" }}>
+                <div className="w-10 h-10 rounded-xl flex items-center justify-center mb-6 transition-colors" style={{ background: "rgba(92,17,25,0.06)" }}>
+                  <Quote className="w-5 h-5 text-[#5C1119]" />
+                </div>
+                <p className="font-semibold text-[#5C1119] text-base mb-4 leading-8" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{t.devanagari}</p>
+                <p className="italic text-[#241C1A]/65 text-sm leading-7 mb-4" style={{ fontFamily: "'Libre Baskerville', Georgia, serif" }}>"{t.english}"</p>
+                <p className="text-[#241C1A]/45 text-xs leading-6">{t.context}</p>
+              </div>
+            ))}
+          </div>
+
+          {/* Philosophy pillars */}
+          <div className="bg-white rounded-3xl p-10 sm:p-14" style={{ border: "1px solid rgba(201,162,39,0.25)" }}>
+            <h3 className="text-2xl font-bold text-[#5C1119] text-center mb-10" style={{ fontFamily: "'Cinzel', serif" }}>The Pillars of His Philosophy</h3>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[
+                { symbol: "ॐ", title: "Dharma", desc: "Righteous living as the unshakeable foundation of all human flourishing — every thought, word, and action aligned with the eternal cosmic order." },
+                { symbol: "🪔", title: "Shakti", desc: "Honouring the divine feminine in all her forms — the Mahavidyas as living gateways to infinite cosmic consciousness and creative power." },
+                { symbol: "🙏", title: "Seva", desc: "Service to every sentient being as the highest act of worship — for to care for another is to honour the Divine that dwells within all." },
+                { symbol: "🌺", title: "Bhakti", desc: "Devotion with श्रद्धा (faith) and साबुरी (patience) — the twin virtues that open every closed door on the path to the Absolute." },
+              ].map((p, i) => (
+                <div key={i} className="text-center p-6 rounded-2xl transition-colors hover:bg-[#FBF3E7]">
+                  <div className="text-4xl mb-4">{p.symbol}</div>
+                  <h4 className="font-bold text-[#5C1119] text-xs tracking-[0.2em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{p.title}</h4>
+                  <p className="text-[#241C1A]/60 text-xs leading-6">{p.desc}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ──────────────────────────────────────────────── */}
+      {/* WHAT I DO                                       */}
+      {/* ──────────────────────────────────────────────── */}
+      <section id="what-i-do" className="bg-[#5C1119] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+
+          {/* Section header */}
+          <div className="text-center mb-20">
+            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>SERVICES & MISSION</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What I Do</h2>
+            <div className="flex items-center justify-center gap-4">
+              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="text-white text-xl" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>माझे कार्य</span>
+              <span className="w-16 h-px bg-[#C9A227]" />
+            </div>
+          </div>
+
+          {/* Services grid */}
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 mb-24">
+            {services.map((s, i) => (
+              <div
+                key={i}
+                className="rounded-2xl p-7 flex flex-col transition-all duration-200 group"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.18)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(201,162,39,0.09)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.55)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.04)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.18)"; }}
+              >
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-200" style={{ background: "rgba(201,162,39,0.18)" }}>
+                  <s.Icon className="w-6 h-6 text-[#C9A227]" />
+                </div>
+                <p className="text-[#C9A227]/60 text-xs mb-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{s.devanagari}</p>
+                <h3 className="font-bold text-white text-lg mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{s.title}</h3>
+                <p className="text-white/62 text-sm leading-7 flex-1 mb-6">{s.desc}</p>
+                <button
+                  onClick={() => setIsBookingOpen(true)}
+                  className="flex items-center gap-2 text-sm font-semibold text-[#C9A227] hover:text-white transition-colors"
+                  style={{ fontFamily: "'Cinzel', serif" }}
+                >
+                  {s.cta} <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+
+          {/* Social Works */}
+          <div className="mb-24">
+            <div className="text-center mb-12">
+              <h3 className="text-2xl font-bold text-[#C9A227] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Social Works & Seva</h3>
+              <p className="text-white/55" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>सामाजिक सेवा कार्य — Sarvatmak Maharudra Parivar Trust</p>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
+              {socialWorks.map((w, i) => (
+                <div
+                  key={i}
+                  className="flex gap-4 items-start rounded-2xl p-6 transition-colors"
+                  style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(201,162,39,0.14)" }}
+                >
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(232,98,44,0.18)" }}>
+                    <w.Icon className="w-5 h-5 text-[#E8622C]" />
+                  </div>
+                  <div>
+                    <h4 className="font-semibold text-white text-sm mb-1.5" style={{ fontFamily: "'Cinzel', serif" }}>{w.title}</h4>
+                    <p className="text-white/52 text-xs leading-6">{w.desc}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Trust Section with Impact Numbers */}
+          <div className="rounded-3xl p-8 sm:p-12" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.3)" }}>
+            <div className="grid lg:grid-cols-2 gap-10 items-center">
+              <div>
+                <p className="text-[#C9A227]/70 text-xs tracking-[0.35em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>FOUNDER & GUIDING FORCE</p>
+                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+                  सर्वात्मक महारुद्र परिवार ट्रस्ट
+                </h3>
+                <p className="font-semibold text-lg mb-1" style={{ fontFamily: "'Cinzel', serif", color: "#C9A227" }}>Sarvatmak Maharudra Parivar Trust</p>
+                <p className="text-white/45 text-xs mb-5 tracking-wider" style={{ fontFamily: "'Cinzel', serif" }}>Reg. No. E0009721(PUN)</p>
+                <p className="text-white/72 text-sm leading-7 mb-4">
+                  <em className="text-[#C9A227] not-italic font-medium">"Serving Humanity with Faith, Compassion & Commitment"</em>
+                </p>
+                <p className="text-white/62 text-sm leading-7 mb-8">
+                  A government-registered charitable trust engaged in education, healthcare, animal welfare, blood donation, and humanitarian relief across Maharashtra — always guided by the principle that bhakti finds its highest expression in seva.
+                </p>
+                <a
+                  href={TRUST_WEBSITE}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="inline-flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-xl transition-all duration-200 text-sm tracking-wider"
+                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 4px 15px rgba(232,98,44,0.3)" }}
+                >
+                  Visit Trust Website <ExternalLink className="w-4 h-4" />
+                </a>
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                {impactNumbers.map((n, i) => (
+                  <div key={i} className="rounded-2xl p-7 text-center transition-all duration-200" style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.28)" }}>
+                    <div className="text-4xl font-bold mb-2" style={{ fontFamily: "'Cinzel', serif", color: "#C9A227" }}>{n.number}</div>
+                    <div className="text-white text-xs font-semibold mb-1">{n.label}</div>
+                    <div className="text-white/45 text-xs" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{n.sub}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Achievements ── */}
+      <section className="bg-[#FBF3E7] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-[#E8622C]/80 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>CREDENTIALS & HONOURS</p>
+            <h2 className="text-4xl font-bold text-[#5C1119] mb-5" style={{ fontFamily: "'Cinzel', serif" }}>Achievements & Recognition</h2>
+            <div className="flex items-center justify-center gap-4">
+              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="text-[#5C1119]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>मान्यता व सन्मान</span>
+              <span className="w-16 h-px bg-[#C9A227]" />
+            </div>
+          </div>
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {achievements.map((a, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-200 group"
+                style={{ border: "1px solid rgba(201,162,39,0.2)" }}
+              >
+                <div className="text-4xl mb-4">{a.icon}</div>
+                <div className="text-[#C9A227] text-xs font-bold tracking-widest mb-2" style={{ fontFamily: "'Cinzel', serif" }}>{a.year}</div>
+                <h4 className="font-bold text-[#5C1119] text-sm mb-3 group-hover:text-[#E8622C] transition-colors leading-snug" style={{ fontFamily: "'Cinzel', serif" }}>{a.title}</h4>
+                <p className="text-[#241C1A]/60 text-xs leading-6">{a.desc}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Testimonials ── */}
+      <section className="bg-[#5C1119] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>DEVOTEE VOICES</p>
+            <h2 className="text-4xl font-bold text-white mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What Devotees Say</h2>
+            <div className="flex items-center justify-center gap-4">
+              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="text-white" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>भक्तांचे अनुभव</span>
+              <span className="w-16 h-px bg-[#C9A227]" />
+            </div>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6">
+            {testimonials.map((t, i) => (
+              <div
+                key={i}
+                className="rounded-2xl p-8 transition-all duration-200"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.2)" }}
+              >
+                <div className="flex gap-1 mb-5">
+                  {Array.from({ length: t.stars }).map((_, j) => (
+                    <Star key={j} className="w-4 h-4" style={{ fill: "#C9A227", color: "#C9A227" }} />
+                  ))}
+                </div>
+                <p className="text-white/80 text-sm leading-8 mb-6 italic" style={{ fontFamily: "'Libre Baskerville', Georgia, serif" }}>
+                  "{t.text}"
+                </p>
+                <div>
+                  <div className="font-semibold text-[#C9A227] text-sm" style={{ fontFamily: "'Cinzel', serif" }}>{t.name}</div>
+                  <div className="flex items-center gap-1 text-white/45 text-xs mt-1">
+                    <MapPin className="w-3 h-3" /> {t.location}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── FAQ ── */}
+      <section className="bg-[#FBF3E7] py-24">
+        <div className="max-w-3xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-[#E8622C]/80 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>FREQUENTLY ASKED</p>
+            <h2 className="text-4xl font-bold text-[#5C1119] mb-5" style={{ fontFamily: "'Cinzel', serif" }}>Questions & Answers</h2>
+            <div className="flex items-center justify-center gap-4">
+              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="text-[#5C1119]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>प्रश्न-उत्तरे</span>
+              <span className="w-16 h-px bg-[#C9A227]" />
+            </div>
+          </div>
+          <div className="space-y-3">
+            {faqs.map((f, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl overflow-hidden transition-all duration-200"
+                style={{ border: `1px solid ${activeFaq === i ? "rgba(201,162,39,0.6)" : "rgba(201,162,39,0.2)"}` }}
+              >
+                <button
+                  className="w-full flex items-center justify-between gap-4 px-7 py-5 text-left"
+                  onClick={() => setActiveFaq(activeFaq === i ? null : i)}
+                >
+                  <span className="font-semibold text-[#5C1119] text-sm" style={{ fontFamily: "'Cinzel', serif" }}>{f.q}</span>
+                  <ChevronDown className={`w-5 h-5 flex-shrink-0 transition-transform duration-200 ${activeFaq === i ? "rotate-180" : ""}`} style={{ color: "#C9A227" }} />
+                </button>
+                {activeFaq === i && (
+                  <div className="px-7 pb-6">
+                    <div className="h-px mb-5" style={{ background: "rgba(201,162,39,0.2)" }} />
+                    <p className="text-[#241C1A]/68 text-sm leading-7">{f.a}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── Contact CTA ── */}
+      <section className="bg-[#5C1119] py-24">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="text-center mb-14">
+            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>REACH OUT</p>
+            <h2 className="text-4xl font-bold text-white mb-4" style={{ fontFamily: "'Cinzel', serif" }}>Connect With Guruvarya</h2>
+            <p className="text-white/60 text-sm max-w-lg mx-auto leading-7">Seek guidance, book a consultation, or simply reach out — every sincere seeker is welcome.</p>
+          </div>
+          <div className="grid sm:grid-cols-3 gap-5 mb-12">
+            {[
+              { Icon: Phone, label: "Call Us", value: PHONE, href: `tel:${PHONE}` },
+              { Icon: MessageCircle, label: "WhatsApp", value: "Quick Connect", href: WHATSAPP_LINK, external: true },
+              { Icon: Mail, label: "Email", value: "info@sarvatmakmaharudra.org", href: "mailto:info@sarvatmakmaharudra.org" },
+            ].map((c, i) => (
+              <a
+                key={i}
+                href={c.href}
+                target={c.external ? "_blank" : undefined}
+                rel={c.external ? "noreferrer" : undefined}
+                className="flex flex-col items-center gap-4 p-8 rounded-2xl transition-all duration-200 group"
+                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.2)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(201,162,39,0.1)"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(201,162,39,0.55)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLAnchorElement).style.background = "rgba(255,255,255,0.04)"; (e.currentTarget as HTMLAnchorElement).style.borderColor = "rgba(201,162,39,0.2)"; }}
+              >
+                <div className="w-14 h-14 rounded-full flex items-center justify-center" style={{ background: "rgba(201,162,39,0.18)" }}>
+                  <c.Icon className="w-6 h-6 text-[#C9A227]" />
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold text-white text-sm mb-1" style={{ fontFamily: "'Cinzel', serif" }}>{c.label}</div>
+                  <div className="text-[#C9A227] font-bold text-sm break-all">{c.value}</div>
+                </div>
+              </a>
+            ))}
+          </div>
+          <div className="text-center">
+            <button
+              onClick={() => setIsBookingOpen(true)}
+              className="px-12 py-4 text-white font-bold rounded-2xl shadow-2xl transition-all duration-200 text-sm tracking-[0.2em]"
+              style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 8px 30px rgba(232,98,44,0.4)" }}
+            >
+              BOOK A CONSULTATION 🙏
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* ── Footer ── */}
+      <footer className="bg-[#2A060B] py-14" style={{ borderTop: "1px solid rgba(201,162,39,0.2)" }}>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6">
+          <div className="grid md:grid-cols-3 gap-10 mb-10">
+            <div className="space-y-5">
+              <div className="flex items-center gap-3">
+                <div className="w-12 h-12 rounded-full overflow-hidden flex-shrink-0" style={{ border: "2px solid #C9A227" }}>
+                  <ImageWithFallback src={logoImg} alt="Guruvarya" className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <div className="font-bold text-[#C9A227] text-sm" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>गुरुवर्य श्री प्रकाशभाऊ शिंदे</div>
+                  <div className="text-white/40 text-xs" style={{ fontFamily: "'Cinzel', serif" }}>(मठाधीपती)</div>
+                </div>
+              </div>
+              <p className="text-white/40 text-xs leading-6">
+                Spiritual Guru | Hanuman Upasak | Astrologer | Spiritual Counsellor<br />
+                Founder, Sarvatmak Maharudra Parivar Trust
+              </p>
+            </div>
+            <div>
+              <h4 className="text-[#C9A227] font-semibold text-xs tracking-widest mb-5" style={{ fontFamily: "'Cinzel', serif" }}>NAVIGATE</h4>
+              <div className="grid grid-cols-2 gap-y-3 gap-x-4">
+                {[
+                  { label: "Who I Am", id: "who-i-am" },
+                  { label: "What I Think", id: "what-i-think" },
+                  { label: "What I Do", id: "what-i-do" },
+                  { label: "Book Consultation", id: null },
+                ].map((item, i) => (
+                  <button
+                    key={i}
+                    onClick={() => item.id ? scrollTo(item.id) : setIsBookingOpen(true)}
+                    className="text-left text-white/40 hover:text-[#C9A227] text-xs transition-colors"
+                    style={{ fontFamily: "'Cinzel', serif" }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <div>
+              <h4 className="text-[#C9A227] font-semibold text-xs tracking-widest mb-5" style={{ fontFamily: "'Cinzel', serif" }}>SARVATMAK MAHARUDRA PARIVAR TRUST</h4>
+              <p className="text-white/35 text-xs mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Reg. No. E0009721(PUN)</p>
+              <p className="text-white/35 text-xs leading-6 mb-4">Serving humanity through education, healthcare, and social welfare under Guruvarya's divine guidance.</p>
+              <a href={TRUST_WEBSITE} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1.5 text-[#C9A227]/70 hover:text-[#C9A227] text-xs transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>
+                sarvatmakmaharudra.org <ExternalLink className="w-3 h-3" />
+              </a>
+            </div>
+          </div>
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4" style={{ borderTop: "1px solid rgba(201,162,39,0.12)" }}>
+            <p className="text-white/25 text-xs" style={{ fontFamily: "'Cinzel', serif" }}>
+              © 2025 Guruvarya Shri Prakashbhau Shinde. All rights reserved.
+            </p>
+            <p className="text-white/25 text-xs" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+              ॐ नमः शिवाय ॥ जय श्री राम ॥ जय हनुमान
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      {/* ── Floating WhatsApp ── */}
+      <a
+        href={WHATSAPP_LINK}
+        target="_blank"
+        rel="noreferrer"
+        title="Chat on WhatsApp"
+        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-200"
+        style={{ background: "#25D366", boxShadow: "0 4px 20px rgba(37,211,102,0.45)" }}
+      >
+        <MessageCircle className="w-7 h-7 text-white" style={{ fill: "white" }} />
+      </a>
+
+      {/* ── Sticky mobile call button ── */}
+      <a
+        href={`tel:${PHONE}`}
+        className="fixed bottom-6 left-6 z-50 lg:hidden w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-200"
+        style={{ background: "#5C1119", border: "2px solid #C9A227" }}
+      >
+        <Phone className="w-6 h-6 text-[#C9A227]" />
+      </a>
+
+      {/* ── Booking Modal ── */}
+      {isBookingOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ overflowY: "auto" }}>
+          <div className="absolute inset-0 bg-black/75 backdrop-blur-sm" onClick={() => setIsBookingOpen(false)} />
+          <div className="relative bg-white rounded-3xl shadow-2xl w-full max-w-md my-4" style={{ maxHeight: "90vh", overflowY: "auto" }}>
+            {/* Modal header */}
+            <div className="rounded-t-3xl px-8 py-7 flex items-center justify-between" style={{ background: "linear-gradient(135deg, #5C1119, #3A0B10)" }}>
+              <div>
+                <h3 className="font-bold text-white text-lg" style={{ fontFamily: "'Cinzel', serif" }}>Book a Consultation</h3>
+                <p className="text-[#C9A227] text-xs mt-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>सल्ला बुक करा</p>
+              </div>
+              <button onClick={() => setIsBookingOpen(false)} className="text-white/50 hover:text-white transition-colors p-1">
+                <X className="w-6 h-6" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSubmit} className="px-8 py-7 space-y-5">
+              {formSubmitted ? (
+                <div className="text-center py-10">
+                  <div className="text-6xl mb-5">🙏</div>
+                  <p className="font-bold text-[#5C1119] text-xl mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Namaskar!</p>
+                  <p className="text-[#241C1A]/65 text-sm leading-7">Your consultation request has been received. Guruvarya's team will contact you within 24 hours to confirm your appointment.</p>
+                </div>
+              ) : (
+                <>
+                  <div>
+                    <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Full Name *</label>
+                    <input
+                      required
+                      value={bookingForm.name}
+                      onChange={e => setBookingForm(f => ({ ...f, name: e.target.value }))}
+                      className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
+                      style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                      placeholder="Your full name"
+                      onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(92,17,25,0.08)"; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; e.currentTarget.style.boxShadow = "none"; }}
+                    />
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div>
+                      <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Phone *</label>
+                      <input
+                        required
+                        value={bookingForm.phone}
+                        onChange={e => setBookingForm(f => ({ ...f, phone: e.target.value }))}
+                        className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
+                        style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                        placeholder="Mobile number"
+                        onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
+                        onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Email</label>
+                      <input
+                        value={bookingForm.email}
+                        onChange={e => setBookingForm(f => ({ ...f, email: e.target.value }))}
+                        className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
+                        style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                        placeholder="Email address"
+                        onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
+                        onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Consultation Type *</label>
+                    <select
+                      required
+                      value={bookingForm.queryType}
+                      onChange={e => setBookingForm(f => ({ ...f, queryType: e.target.value }))}
+                      className="w-full px-4 py-3.5 rounded-xl text-sm outline-none bg-[#FAFAFA]"
+                      style={{ border: "1.5px solid rgba(92,17,25,0.15)" }}
+                    >
+                      <option value="">Select type</option>
+                      <option>Astrology Consultation</option>
+                      <option>Spiritual Counselling</option>
+                      <option>Hanuman Upasana Guidance</option>
+                      <option>Dasha Mahavidya Sadhana</option>
+                      <option>Personal Blessings (Ashirwad)</option>
+                      <option>Trust Donation / Contribution</option>
+                      <option>Other</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Message</label>
+                    <textarea
+                      value={bookingForm.message}
+                      onChange={e => setBookingForm(f => ({ ...f, message: e.target.value }))}
+                      rows={3}
+                      className="w-full px-4 py-3.5 rounded-xl text-sm outline-none resize-none"
+                      style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                      placeholder="Briefly describe your query or what you seek guidance on..."
+                      onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
+                      onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
+                    />
+                  </div>
+                  <button
+                    type="submit"
+                    className="w-full py-4 text-white font-bold rounded-2xl transition-all duration-200 text-sm tracking-widest shadow-xl"
+                    style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 6px 20px rgba(232,98,44,0.35)" }}
+                  >
+                    SUBMIT REQUEST 🙏
+                  </button>
+                  <p className="text-center text-[#241C1A]/40 text-xs">We will contact you within 24 hours to confirm your appointment.</p>
+                </>
+              )}
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
