@@ -1,0 +1,57 @@
+import { createHotContext as __vite__createHotContext } from "/@vite/client";import.meta.hot = __vite__createHotContext("/src/app/App.tsx");import __vite__cjsImport0_react_jsxDevRuntime from "/node_modules/.vite/deps/react_jsx-dev-runtime.js?v=8e66061b"; const jsxDEV = __vite__cjsImport0_react_jsxDevRuntime["jsxDEV"];
+import * as RefreshRuntime from "/@react-refresh";
+const inWebWorker = typeof WorkerGlobalScope !== "undefined" && self instanceof WorkerGlobalScope;
+let prevRefreshReg;
+let prevRefreshSig;
+if (import.meta.hot && !inWebWorker) {
+  if (!window.$RefreshReg$) {
+    throw new Error(
+      "@vitejs/plugin-react can't detect preamble. Something is wrong."
+    );
+  }
+  prevRefreshReg = window.$RefreshReg$;
+  prevRefreshSig = window.$RefreshSig$;
+  window.$RefreshReg$ = RefreshRuntime.getRefreshReg("C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx");
+  window.$RefreshSig$ = RefreshRuntime.createSignatureFunctionForTransform;
+}
+export default function App() {
+  return /* @__PURE__ */ jsxDEV("div", { className: "min-h-screen bg-[#FBF3E7] text-[#241C1A]", style: { fontFamily: "'Poppins', sans-serif" }, children: /* @__PURE__ */ jsxDEV("div", { className: "max-w-4xl mx-auto p-8", children: [
+    /* @__PURE__ */ jsxDEV("h1", { className: "text-3xl font-bold", children: "Development placeholder" }, void 0, false, {
+      fileName: "C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx",
+      lineNumber: 26,
+      columnNumber: 9
+    }, this),
+    /* @__PURE__ */ jsxDEV("p", { className: "mt-4 text-sm text-[#5C1119]", children: "The original App was large — temporarily replaced to resolve JSX parsing errors. I can restore or re-integrate `GlobalNav` and the page content once you confirm." }, void 0, false, {
+      fileName: "C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx",
+      lineNumber: 27,
+      columnNumber: 9
+    }, this)
+  ] }, void 0, true, {
+    fileName: "C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx",
+    lineNumber: 25,
+    columnNumber: 7
+  }, this) }, void 0, false, {
+    fileName: "C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx",
+    lineNumber: 24,
+    columnNumber: 5
+  }, this);
+}
+_c = App;
+var _c;
+$RefreshReg$(_c, "App");
+if (import.meta.hot && !inWebWorker) {
+  window.$RefreshReg$ = prevRefreshReg;
+  window.$RefreshSig$ = prevRefreshSig;
+}
+if (import.meta.hot && !inWebWorker) {
+  RefreshRuntime.__hmr_import(import.meta.url).then((currentExports) => {
+    RefreshRuntime.registerExportsForReactRefresh("C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx", currentExports);
+    import.meta.hot.accept((nextExports) => {
+      if (!nextExports) return;
+      const invalidateMessage = RefreshRuntime.validateRefreshBoundaryAndEnqueueUpdate("C:/Users/Atharv/Downloads/PrakashBhau_Website/src/app/App.tsx", currentExports, nextExports);
+      if (invalidateMessage) import.meta.hot.invalidate(invalidateMessage);
+    });
+  });
+}
+
+//# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJtYXBwaW5ncyI6IkFBTVE7Ozs7Ozs7Ozs7Ozs7Ozs7QUFKUix3QkFBd0JBLE1BQU07QUFDNUIsU0FDRSx1QkFBQyxTQUFJLFdBQVUsNENBQTJDLE9BQU8sRUFBRUMsWUFBWSx3QkFBd0IsR0FDckcsaUNBQUMsU0FBSSxXQUFVLHlCQUNiO0FBQUEsMkJBQUMsUUFBRyxXQUFVLHNCQUFxQix1Q0FBbkM7QUFBQTtBQUFBO0FBQUE7QUFBQSxXQUEwRDtBQUFBLElBQzFELHVCQUFDLE9BQUUsV0FBVSwrQkFBOEIsaUxBQTNDO0FBQUE7QUFBQTtBQUFBO0FBQUEsV0FBNE07QUFBQSxPQUY5TTtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBR0EsS0FKRjtBQUFBO0FBQUE7QUFBQTtBQUFBLFNBS0E7QUFFSjtBQUFDQyxLQVR1QkY7QUFBRyxJQUFBRTtBQUFBLGFBQUFBLElBQUEiLCJuYW1lcyI6WyJBcHAiLCJmb250RmFtaWx5IiwiX2MiXSwiaWdub3JlTGlzdCI6W10sInNvdXJjZXMiOlsiQXBwLnRzeCJdLCJzb3VyY2VzQ29udGVudCI6WyJpbXBvcnQgUmVhY3QgZnJvbSBcInJlYWN0XCI7XHJcblxyXG5leHBvcnQgZGVmYXVsdCBmdW5jdGlvbiBBcHAoKSB7XHJcbiAgcmV0dXJuIChcclxuICAgIDxkaXYgY2xhc3NOYW1lPVwibWluLWgtc2NyZWVuIGJnLVsjRkJGM0U3XSB0ZXh0LVsjMjQxQzFBXVwiIHN0eWxlPXt7IGZvbnRGYW1pbHk6IFwiJ1BvcHBpbnMnLCBzYW5zLXNlcmlmXCIgfX0+XHJcbiAgICAgIDxkaXYgY2xhc3NOYW1lPVwibWF4LXctNHhsIG14LWF1dG8gcC04XCI+XHJcbiAgICAgICAgPGgxIGNsYXNzTmFtZT1cInRleHQtM3hsIGZvbnQtYm9sZFwiPkRldmVsb3BtZW50IHBsYWNlaG9sZGVyPC9oMT5cclxuICAgICAgICA8cCBjbGFzc05hbWU9XCJtdC00IHRleHQtc20gdGV4dC1bIzVDMTExOV1cIj5UaGUgb3JpZ2luYWwgQXBwIHdhcyBsYXJnZSDigJQgdGVtcG9yYXJpbHkgcmVwbGFjZWQgdG8gcmVzb2x2ZSBKU1ggcGFyc2luZyBlcnJvcnMuIEkgY2FuIHJlc3RvcmUgb3IgcmUtaW50ZWdyYXRlIGBHbG9iYWxOYXZgIGFuZCB0aGUgcGFnZSBjb250ZW50IG9uY2UgeW91IGNvbmZpcm0uPC9wPlxyXG4gICAgICA8L2Rpdj5cclxuICAgIDwvZGl2PlxyXG4gICk7XHJcbn1cclxuIl0sImZpbGUiOiJDOi9Vc2Vycy9BdGhhcnYvRG93bmxvYWRzL1ByYWthc2hCaGF1X1dlYnNpdGUvc3JjL2FwcC9BcHAudHN4In0=
