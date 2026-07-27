@@ -7,6 +7,7 @@ import {
   Star, Award, Users, Heart, BookOpen,
   MapPin, Mail, ChevronRight, Quote,
   Globe, ExternalLink, Sparkles, Sun, Zap,
+  CheckCircle,
 } from "lucide-react";
 
 const PHONE = "9960227894";
@@ -129,10 +130,10 @@ const faqs = [
 ];
 
 const achievements = [
-  { icon: "🎓", title: "Doctorate in Spiritual Education", desc: "Formal academic recognition of over a decade of rigorous spiritual study, sadhana, and the guidance of thousands of devotees.", year: "2018" },
-  { icon: "🏛️", title: "Mathadhipati", desc: "Consecrated as the highest guiding authority of the Math — entrusted with the spiritual welfare and upliftment of a growing community.", year: "2020" },
-  { icon: "🌺", title: "Dasha Mahavidya Grace", desc: "Rare and verified blessing of all ten Mahavidyas — recognised and affirmed by renowned saints, scholars, and spiritual leaders.", year: "2012" },
-  { icon: "🤝", title: "Social Reformer & Spiritual Leader", desc: "Recognised by dignitaries, community leaders, and government representatives for outstanding contribution to social welfare and spiritual guidance.", year: "Ongoing" },
+  { Icon: Star, title: "Doctorate in Spiritual Education", desc: "Formal academic recognition of over a decade of rigorous spiritual study, sadhana, and the guidance of thousands of devotees.", year: "2018" },
+  { Icon: Award, title: "Mathadhipati", desc: "Consecrated as the highest guiding authority of the Math — entrusted with the spiritual welfare and upliftment of a growing community.", year: "2020" },
+  { Icon: Sparkles, title: "Dasha Mahavidya Grace", desc: "Rare and divine blessings of all ten Mahavidyas — recognised and affirmed by revered saints and spiritual leaders.", year: "2012" },
+  { Icon: Users, title: "Social Reformer & Spiritual Leader", desc: "Recognised by dignitaries, community leaders, and government representatives for outstanding contribution to social welfare and spiritual guidance.", year: "Ongoing" },
 ];
 
 // ─── App ───────────────────────────────────────────────────────────────────────
@@ -267,15 +268,16 @@ export default function App() {
       </header>
 
       {/* ── Hero Section ── */}
-      <section id="hero" className="relative min-h-[92vh] flex items-center overflow-hidden">
+      <section id="hero" className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <ImageWithFallback
             src={heroImg}
             alt="Sarvatmak Maharudra Parivar Trust — Guruvarya Shri Prakashbhau Shinde with revered saints and dignitaries"
-            className="w-full h-full object-cover object-center"
+            className="w-full h-full object-cover"
+            style={{ objectPosition: "center 20%" }}
           />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(92,17,25,0.97) 0%, rgba(92,17,25,0.88) 45%, rgba(58,11,16,0.65) 100%)" }} />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(58,11,16,0.85) 0%, transparent 50%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.18) 100%)" }} />
+          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)" }} />
         </div>
 
         {/* Decorative Om watermark */}
@@ -349,7 +351,7 @@ export default function App() {
             <div className="flex justify-center lg:justify-end">
               <div className="relative">
                 {/* Outer glow ring */}
-                <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(201,162,39,0.15) 0%, transparent 70%)", transform: "scale(1.3)" }} />
+                <div className="absolute inset-0 rounded-full" style={{ background: "radial-gradient(circle, rgba(201,162,39,0.12) 0%, transparent 70%)", transform: "scale(1.3)" }} />
                 <div
                   className="w-64 h-64 sm:w-80 sm:h-80 lg:w-[380px] lg:h-[380px] rounded-full overflow-hidden shadow-2xl"
                   style={{ border: "4px solid #C9A227", boxShadow: "0 0 0 8px rgba(201,162,39,0.18), 0 30px 80px rgba(0,0,0,0.5)" }}
@@ -366,26 +368,28 @@ export default function App() {
               </div>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* ── Trust Badge Strip ── */}
-      <section className="bg-white py-8" style={{ borderBottom: "1px solid rgba(201,162,39,0.25)", borderTop: "1px solid rgba(201,162,39,0.25)" }}>
-        <div className="max-w-6xl mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
-            {[
-              { icon: "🙏", num: "14+", label: "Years of Tapasya", sub: "हनुमान उपासना" },
-              { icon: "🎓", num: "Ph.D.", label: "Spiritual Education", sub: "आध्यात्मिक शिक्षण" },
-              { icon: "🏛️", num: "Mathadhipati", label: "Math Heading", sub: "मठाधीपती" },
-              { icon: "🌺", num: "10", label: "Dasha Mahavidyas", sub: "दश महाविद्या" },
-            ].map((b, i) => (
-              <div key={i} className="text-center group py-2">
-                <div className="text-3xl mb-2">{b.icon}</div>
-                <div className="text-xl font-bold text-[#5C1119] group-hover:text-[#E8622C] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>{b.num}</div>
-                <div className="text-xs font-semibold text-[#241C1A] mt-0.5">{b.label}</div>
-                <div className="text-xs text-[#241C1A]/55 mt-0.5" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{b.sub}</div>
+          {/* Hero stat badges */}
+          <div className="mt-12 relative z-10">
+            <div className="mx-auto max-w-6xl px-4">
+              <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+                {[
+                  { Icon: Star, num: "14+", title: "Years of Tapasya", sub: "हनुमान उपासना" },
+                  { Icon: Award, num: "Ph.D.", title: "Spiritual Education", sub: "आध्यात्मिक शिक्षण" },
+                  { Icon: BookOpen, num: "Mathadhipati", title: "Math Leadership", sub: "मठाधीपती" },
+                  { Icon: Sparkles, num: "10", title: "Dasha Mahavidyas", sub: "दश महाविद्या" },
+                ].map((b, i) => (
+                  <div key={i} className="flex flex-col items-center gap-2 rounded-3xl p-5" style={{ background: "rgba(46, 7, 12, 0.55)", backdropFilter: "blur(8px)", border: "1px solid rgba(201,162,39,0.75)" }}>
+                    <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-white/10 text-[#C9A227]">
+                      <b.Icon className="w-6 h-6" />
+                    </div>
+                    <div className="text-2xl font-bold text-white" style={{ fontFamily: "'Cinzel', serif" }}>{b.num}</div>
+                    <div className="text-sm font-semibold text-[#F4E7C6]" style={{ fontFamily: "'Cinzel', serif" }}>{b.title}</div>
+                    <div className="text-xs text-[#D9B760]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{b.sub}</div>
+                  </div>
+                ))}
               </div>
-            ))}
+            </div>
           </div>
         </div>
       </section>
@@ -568,13 +572,15 @@ export default function App() {
             <h3 className="text-2xl font-bold text-[#5C1119] text-center mb-10" style={{ fontFamily: "'Cinzel', serif" }}>The Pillars of His Philosophy</h3>
             <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {[
-                { symbol: "ॐ", title: "Dharma", desc: "Righteous living as the unshakeable foundation of all human flourishing — every thought, word, and action aligned with the eternal cosmic order." },
-                { symbol: "🪔", title: "Shakti", desc: "Honouring the divine feminine in all her forms — the Mahavidyas as living gateways to infinite cosmic consciousness and creative power." },
-                { symbol: "🙏", title: "Seva", desc: "Service to every sentient being as the highest act of worship — for to care for another is to honour the Divine that dwells within all." },
-                { symbol: "🌺", title: "Bhakti", desc: "Devotion with श्रद्धा (faith) and साबुरी (patience) — the twin virtues that open every closed door on the path to the Absolute." },
+                { Icon: Globe, title: "Dharma", desc: "Righteous living as the unshakeable foundation of all human flourishing — every thought, word, and action aligned with the eternal cosmic order." },
+                { Icon: Sparkles, title: "Shakti", desc: "Honouring the divine feminine in all her forms — the Mahavidyas as living gateways to infinite cosmic consciousness and creative power." },
+                { Icon: Heart, title: "Seva", desc: "Service to every sentient being as the highest act of worship — for to care for another is to honour the Divine that dwells within all." },
+                { Icon: BookOpen, title: "Bhakti", desc: "Devotion with श्रद्धा (faith) and साबुरी (patience) — the twin virtues that open every closed door on the path to the Absolute." },
               ].map((p, i) => (
                 <div key={i} className="text-center p-6 rounded-2xl transition-colors hover:bg-[#FBF3E7]">
-                  <div className="text-4xl mb-4">{p.symbol}</div>
+                  <div className="flex items-center justify-center mx-auto mb-4 w-14 h-14 rounded-2xl bg-[#F6E5CB]">
+                    <p.Icon className="w-8 h-8 text-[#C9A227]" />
+                  </div>
                   <h4 className="font-bold text-[#5C1119] text-xs tracking-[0.2em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{p.title}</h4>
                   <p className="text-[#241C1A]/60 text-xs leading-6">{p.desc}</p>
                 </div>
@@ -712,7 +718,9 @@ export default function App() {
                 className="bg-white rounded-2xl p-7 shadow-sm hover:shadow-lg transition-all duration-200 group"
                 style={{ border: "1px solid rgba(201,162,39,0.2)" }}
               >
-                <div className="text-4xl mb-4">{a.icon}</div>
+                <div className="flex items-center justify-center w-14 h-14 rounded-2xl mb-4 bg-[#F6E5CB]">
+                  <a.Icon className="w-7 h-7 text-[#C9A227]" />
+                </div>
                 <div className="text-[#C9A227] text-xs font-bold tracking-widest mb-2" style={{ fontFamily: "'Cinzel', serif" }}>{a.year}</div>
                 <h4 className="font-bold text-[#5C1119] text-sm mb-3 group-hover:text-[#E8622C] transition-colors leading-snug" style={{ fontFamily: "'Cinzel', serif" }}>{a.title}</h4>
                 <p className="text-[#241C1A]/60 text-xs leading-6">{a.desc}</p>
@@ -839,7 +847,7 @@ export default function App() {
               className="px-12 py-4 text-white font-bold rounded-2xl shadow-2xl transition-all duration-200 text-sm tracking-[0.2em]"
               style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 8px 30px rgba(232,98,44,0.4)" }}
             >
-              BOOK A CONSULTATION 🙏
+              BOOK A CONSULTATION
             </button>
           </div>
         </div>
@@ -944,7 +952,7 @@ export default function App() {
             <form onSubmit={handleSubmit} className="px-8 py-7 space-y-5">
               {formSubmitted ? (
                 <div className="text-center py-10">
-                  <div className="text-6xl mb-5">🙏</div>
+                  <CheckCircle className="mx-auto mb-5 w-16 h-16 text-[#C9A227]" />
                   <p className="font-bold text-[#5C1119] text-xl mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Namaskar!</p>
                   <p className="text-[#241C1A]/65 text-sm leading-7">Your consultation request has been received. Guruvarya's team will contact you within 24 hours to confirm your appointment.</p>
                 </div>
@@ -1027,7 +1035,7 @@ export default function App() {
                     className="w-full py-4 text-white font-bold rounded-2xl transition-all duration-200 text-sm tracking-widest shadow-xl"
                     style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 6px 20px rgba(232,98,44,0.35)" }}
                   >
-                    SUBMIT REQUEST 🙏
+                    SUBMIT REQUEST
                   </button>
                   <p className="text-center text-[#241C1A]/40 text-xs">We will contact you within 24 hours to confirm your appointment.</p>
                 </>
