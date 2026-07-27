@@ -1,3 +1,63 @@
 @import './fonts.css';
 @import './tailwind.css';
 @import './theme.css';
+
+.mantra-strip {
+  background: linear-gradient(90deg, var(--maroon-950), var(--maroon-800), var(--maroon-950));
+  padding: 0.8rem 0;
+  overflow: hidden;
+  border-top: 1px solid var(--gold);
+  border-bottom: 1px solid var(--gold);
+  position: relative;
+}
+
+.mantra-strip::before {
+  content: "।। हनुमान गायत्री मंत्र ।।";
+  display: block;
+  text-align: center;
+  font-family: var(--font-dev);
+  color: var(--gold);
+  font-size: 0.85rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.4rem;
+}
+
+.mantra-track {
+  display: flex;
+  gap: 3rem;
+  white-space: nowrap;
+  width: max-content;
+  animation: mantra-scroll 35s linear infinite;
+}
+
+.mantra-item {
+  font-family: var(--font-dev);
+  color: var(--cream);
+  font-size: 1rem;
+  letter-spacing: 0.3px;
+}
+
+@keyframes mantra-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.mantra-strip:hover .mantra-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mantra-track {
+    animation: none;
+  }
+}
+
+@media (max-width: 600px) {
+  .mantra-item {
+    font-size: 0.85rem;
+  }
+
+  .mantra-track {
+    gap: 2rem;
+  }
+}

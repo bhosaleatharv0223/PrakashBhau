@@ -220,6 +220,7 @@ export default function App() {
     { label: "Who I Am", id: "who-i-am" },
     { label: "What I Think", id: "what-i-think" },
     { label: "What I Do", id: "what-i-do" },
+    { label: "Philosophy", href: "/philosophy.html" },
   ];
 
   return (
@@ -248,21 +249,21 @@ export default function App() {
       <header
         className={`w-full z-50 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] ${
           navVariant === "default"
-            ? "sticky top-0 bg-white/97 backdrop-blur-md shadow-sm"
+            ? "sticky top-0 bg-white/97 backdrop-blur-md shadow-sm overflow-visible"
             : navVariant === "floating"
-              ? "sticky top-3 bg-transparent"
-              : "sticky top-0 pointer-events-none opacity-0 -translate-y-6"
+              ? "sticky top-3 bg-transparent overflow-visible"
+              : "sticky top-0 pointer-events-none opacity-0 -translate-y-6 overflow-visible"
         }`}
-        style={{ borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
+        style={{ height: "80px", borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
       >
-        <nav className={`mx-auto px-4 sm:px-6 py-3 flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu ${
+        <nav className={`mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu ${
           navVariant === "floating"
             ? "max-w-5xl rounded-full border border-[#C9A227]/15 bg-white/95 shadow-[0_20px_50px_rgba(36,28,26,0.16)] backdrop-blur-xl"
             : "max-w-7xl rounded-none"
         }`}>
           {/* Logo */}
-          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3 sm:gap-4 md:gap-5 flex-shrink-0 group mr-2 sm:mr-3 lg:mr-6 min-h-[48px] py-1">
-            <div className="w-16 h-16 sm:w-[4.4rem] sm:h-[4.4rem] rounded-full overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:scale-105" style={{ border: "3.25px solid #E8622C", boxShadow: "0 0 0 4px rgba(201,162,39,0.24), 0 14px 32px rgba(92,17,25,0.16)" }}>
+          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3 sm:gap-4 md:gap-5 flex-shrink-0 group mr-2 sm:mr-3 lg:mr-6 min-h-[72px]" style={{ overflow: "visible" }}>
+            <div className="relative -mt-1 -mb-1 w-[56px] h-[56px] sm:w-[72px] sm:h-[72px] rounded-full overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:scale-105" style={{ border: "3.25px solid #E8622C", boxShadow: "0 0 0 4px rgba(201,162,39,0.24), 0 14px 32px rgba(92,17,25,0.16)" }}>
               <ImageWithFallback src={logoImg} alt="Guruvarya Shri Prakashbhau Shinde" className="w-full h-full object-cover" />
             </div>
             <div className="flex items-center text-left leading-tight min-w-0">
@@ -276,16 +277,27 @@ export default function App() {
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((item) => (
-              <button
-                key={item.id}
-                onClick={() => scrollTo(item.id)}
-                className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
-                style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent"; }}
-              >
-                {item.label}
-              </button>
+              item.href ? (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
+                  style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
+                >
+                  {item.label}
+                </a>
+              ) : (
+                <button
+                  key={item.id ?? item.label}
+                  onClick={() => item.id ? scrollTo(item.id) : undefined}
+                  className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
+                  style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent"; }}
+                >
+                  {item.label}
+                </button>
+              )
             ))}
           </div>
 
@@ -313,9 +325,15 @@ export default function App() {
         {isMenuOpen && (
           <div className="lg:hidden bg-white px-4 py-4 space-y-1" style={{ borderTop: "1px solid rgba(201,162,39,0.2)" }}>
             {navLinks.map((item) => (
-              <button key={item.id} onClick={() => scrollTo(item.id)} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
-                {item.label}
-              </button>
+              item.href ? (
+                <a key={item.label} href={item.href} className="block w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                  {item.label}
+                </a>
+              ) : (
+                <button key={item.id ?? item.label} onClick={() => item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                  {item.label}
+                </button>
+              )
             ))}
             <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(201,162,39,0.2)" }}>
               <a href={`tel:${PHONE}`} className="flex items-center gap-2 px-4 py-3 text-[#5C1119] font-medium" style={{ fontFamily: "'Cinzel', serif" }}>
@@ -332,12 +350,15 @@ export default function App() {
       {/* ── Hero Section ── */}
       <section id="hero" className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
-          <ImageWithFallback
-            src={heroImg}
-            alt="Sarvatmak Maharudra Parivar Trust — Guruvarya Shri Prakashbhau Shinde with revered saints and dignitaries"
-            className="w-full h-full object-cover"
-            style={{ objectPosition: "center 20%" }}
-          />
+          <picture>
+            <source media="(max-width: 767px)" srcSet="/prakshbhau.jpeg" />
+            <img
+              src={heroImg}
+              alt="Sarvatmak Maharudra Parivar Trust — Guruvarya Shri Prakashbhau Shinde with revered saints and dignitaries"
+              className="w-full h-full object-cover"
+              style={{ objectPosition: "center 20%" }}
+            />
+          </picture>
           <div className="absolute inset-0" style={{ background: "linear-gradient(105deg, rgba(0,0,0,0.45) 0%, rgba(0,0,0,0.35) 45%, rgba(0,0,0,0.18) 100%)" }} />
           <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.55) 0%, transparent 50%)" }} />
         </div>
@@ -371,7 +392,7 @@ export default function App() {
 
               <div className="flex flex-wrap gap-2">
                 {["Spiritual Guru", "Hanuman Upasak", "Astrologer", "Spiritual Counsellor"].map(tag => (
-                  <span key={tag} className="px-3.5 py-1 text-[#C9A227] text-xs font-medium tracking-wider rounded-full" style={{ fontFamily: "'Cinzel', serif", border: "1px solid rgba(201,162,39,0.45)" }}>
+                  <span key={tag} className="px-3.5 py-1 text-white text-xs font-medium tracking-wider rounded-full" style={{ fontFamily: "'Cinzel', serif", border: "1px solid rgba(255,255,255,0.35)" }}>
                     {tag}
                   </span>
                 ))}
@@ -385,15 +406,15 @@ export default function App() {
               <div className="flex flex-wrap gap-3 pt-1">
                 <button
                   onClick={() => setIsBookingOpen(true)}
-                  className="flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-xl transition-all duration-200 text-sm tracking-wider"
-                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 6px 20px rgba(232,98,44,0.4)" }}
+                  className="flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-full transition-all duration-200 text-sm tracking-[0.2em] hover:-translate-y-0.5"
+                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #F6A24E, #D85A24)", boxShadow: "0 18px 45px rgba(232,98,44,0.28)" }}
                 >
                   <Phone className="w-4 h-4" /> Book Consultation
                 </button>
                 <button
                   onClick={() => scrollTo("what-i-do")}
-                  className="px-7 py-3.5 font-bold rounded-xl transition-all duration-200 text-sm tracking-wider hover:bg-[#C9A227] hover:text-[#5C1119]"
-                  style={{ fontFamily: "'Cinzel', serif", border: "2px solid #C9A227", color: "#C9A227" }}
+                  className="px-7 py-3.5 font-bold rounded-full transition-all duration-200 text-sm tracking-[0.18em] hover:bg-[#C9A227] hover:text-[#5C1119]"
+                  style={{ fontFamily: "'Cinzel', serif", border: "1px solid rgba(201,162,39,0.8)", color: "#F5E2B4", background: "rgba(255,255,255,0.08)" }}
                 >
                   Our Services
                 </button>
@@ -424,7 +445,7 @@ export default function App() {
                     className="w-full h-full object-cover"
                   />
                 </div>
-                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-xl whitespace-nowrap text-xs font-bold tracking-[0.25em]" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #C9A227, #A87D10)", color: "#3A0B10" }}>
+                <div className="absolute -bottom-5 left-1/2 -translate-x-1/2 px-5 py-2 rounded-full shadow-[0_16px_40px_rgba(0,0,0,0.22)] whitespace-nowrap text-xs font-bold tracking-[0.25em]" style={{ fontFamily: "'Cinzel', serif", background: "rgba(18, 10, 6, 0.92)", border: "1px solid rgba(255,214,130,0.2)", color: "#F8E5A4" }}>
                   MATHADHIPATI
                 </div>
               </div>
@@ -455,6 +476,18 @@ export default function App() {
           </div>
         </div>
       </section>
+
+      {/* ── Hanuman Gayatri Mantra Strip ── */}
+      <div className="mantra-strip">
+        <div className="mantra-track">
+          <span className="mantra-item">ॐ रामदूताय विद्महे कपिरंजाय धीमही तन्नो हनुमान: प्रचोदयात् ।।</span>
+          <span className="mantra-item">ॐ आंजनेयाय विद्महे महावलाय धीमही तन्नो मारुति: प्रचोदयात् ।।</span>
+          <span className="mantra-item">ॐ अंजनिसुताय विद्महे वायुपुत्राय धीमही तन्नो मारुति: प्रचोदयात् ।।</span>
+          <span className="mantra-item">ॐ रामदूताय विद्महे कपिरंजाय धीमही तन्नो हनुमान: प्रचोदयात् ।।</span>
+          <span className="mantra-item">ॐ आंजनेयाय विद्महे महावलाय धीमही तन्नो मारुति: प्रचोदयात् ।।</span>
+          <span className="mantra-item">ॐ अंजनिसुताय विद्महे वायुपुत्राय धीमही तन्नो मारुति: प्रचोदयात् ।।</span>
+        </div>
+      </div>
 
       {/* ──────────────────────────────────────────────── */}
       {/* WHO I AM                                        */}
@@ -580,7 +613,7 @@ export default function App() {
             </div>
           </div>
 
-          {/* Hero quote */}
+          {/* HERO QUOTE */}
           <div className="rounded-3xl p-10 sm:p-16 mb-16 relative overflow-hidden" style={{ background: "linear-gradient(135deg, #5C1119, #3A0B10)" }}>
             <div className="absolute top-6 left-8 select-none pointer-events-none" style={{ fontFamily: "Georgia, serif", fontSize: "10rem", lineHeight: 1, color: "rgba(201,162,39,0.08)", fontWeight: 700 }}>
               "
@@ -941,16 +974,28 @@ export default function App() {
                   { label: "Who I Am", id: "who-i-am" },
                   { label: "What I Think", id: "what-i-think" },
                   { label: "What I Do", id: "what-i-do" },
+                  { label: "Philosophy", href: "/philosophy.html" },
                   { label: "Book Consultation", id: null },
                 ].map((item, i) => (
-                  <button
-                    key={i}
-                    onClick={() => item.id ? scrollTo(item.id) : setIsBookingOpen(true)}
-                    className="text-left text-white/40 hover:text-[#C9A227] text-xs transition-colors"
-                    style={{ fontFamily: "'Cinzel', serif" }}
-                  >
-                    {item.label}
-                  </button>
+                  item.href ? (
+                    <a
+                      key={item.label}
+                      href={item.href}
+                      className="text-left text-white/40 hover:text-[#C9A227] text-xs transition-colors"
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
+                      {item.label}
+                    </a>
+                  ) : (
+                    <button
+                      key={item.label}
+                      onClick={() => item.id ? scrollTo(item.id) : setIsBookingOpen(true)}
+                      className="text-left text-white/40 hover:text-[#C9A227] text-xs transition-colors"
+                      style={{ fontFamily: "'Cinzel', serif" }}
+                    >
+                      {item.label}
+                    </button>
+                  )
                 ))}
               </div>
             </div>

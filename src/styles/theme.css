@@ -39,6 +39,11 @@
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
+  --maroon-950: #2c0206;
+  --maroon-800: #581214;
+  --gold: #C9A227;
+  --cream: #F8E5A4;
+  --font-dev: 'Noto Serif Devanagari', serif;
 }
 
 .dark {
