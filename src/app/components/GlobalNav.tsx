@@ -72,6 +72,29 @@ export default function GlobalNav({
     };
   }, [heroRef]);
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    const initTranslate = () => {
+      const google = (window as any).google;
+      if (!google || !google.translate) return;
+      const config = {
+        pageLanguage: "en",
+        includedLanguages: "mr,hi,bn,as,en,ar,ur",
+        layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+        autoDisplay: false,
+      };
+      const desktop = document.getElementById("google_translate_element_desktop");
+      const mobile = document.getElementById("google_translate_element_mobile");
+      if (desktop && !desktop.hasChildNodes()) {
+        new google.translate.TranslateElement(config, "google_translate_element_desktop");
+      }
+      if (mobile && !mobile.hasChildNodes()) {
+        new google.translate.TranslateElement(config, "google_translate_element_mobile");
+      }
+    };
+    initTranslate();
+  }, []);
+
   const handleNavClick = (item: NavItem) => {
     if (item.path) {
       onNavigateRoute(item.path);
@@ -118,6 +141,8 @@ export default function GlobalNav({
             ? "max-w-[34rem] rounded-full border border-[#C9A227]/15 bg-white/95 shadow-[0_20px_50px_rgba(36,28,26,0.16)] backdrop-blur-xl"
             : "max-w-7xl rounded-none"
         }`}>
+          <div id="google_translate_element_left_desktop" className="google-translate-container google-translate-left notranslate" translate="no" />
+          <button id="reopenLangPopup" className="nav-lang-btn ml-2 hidden lg:inline-flex" title="Change Language">🌐</button>
           <button onClick={() => handleNavClick({ id: "hero" })} className="flex items-center gap-2.5 sm:gap-3 md:gap-4 flex-shrink-0 group mr-2 sm:mr-3 lg:mr-4 min-h-[44px] py-1">
             <div className="w-[3.5rem] h-[3.5rem] sm:w-[3.8rem] sm:h-[3.8rem] rounded-full overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:scale-105" style={{ border: "3px solid #E8622C", boxShadow: "0 0 0 3.5px rgba(201,162,39,0.22), 0 10px 24px rgba(92,17,25,0.14)" }}>
               <ImageWithFallback src={logoImg} alt="Guruvarya Shri Prakashbhau Shinde" className="w-full h-full object-cover" />
@@ -148,7 +173,7 @@ export default function GlobalNav({
             })}
           </div>
 
-          <div className="hidden lg:flex items-center gap-4">
+          <div className="hidden lg:flex items-center gap-4 nav-actions">
             <a href={`tel:${phone}`} className="flex items-center gap-1.5 text-sm font-medium text-[#5C1119] hover:text-[#E8622C] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>
               <Phone className="w-4 h-4" /> {phone}
             </a>
@@ -174,6 +199,7 @@ export default function GlobalNav({
               </button>
             ))}
             <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(201,162,39,0.2)" }}>
+                <div id="google_translate_element_left_mobile" className="google-translate-container notranslate" translate="no" />
               <a href={`tel:${phone}`} className="flex items-center gap-2 px-4 py-3 text-[#5C1119] font-medium" style={{ fontFamily: "'Cinzel', serif" }}>
                 <Phone className="w-4 h-4" /> {phone}
               </a>

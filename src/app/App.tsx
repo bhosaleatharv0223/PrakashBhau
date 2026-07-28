@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoImg from "@/imports/logo.png";
 import heroImg from "@/imports/Hero_section.jpeg";
@@ -1087,9 +1088,9 @@ export default function App() {
         rel="noreferrer"
         title="Chat on WhatsApp"
         className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-200"
-        style={{ background: "#25D366", boxShadow: "0 4px 20px rgba(37,211,102,0.45)" }}
+        style={{ background: 'transparent', boxShadow: '0 6px 18px rgba(0,0,0,0.16)' }}
       >
-        <MessageCircle className="w-7 h-7 text-white" style={{ fill: "white" }} />
+        <img src="/whatsapp-logo.png" alt="WhatsApp" className="w-9 h-9 object-contain" />
       </a>
 
       {/* ── Sticky mobile call button ── */}

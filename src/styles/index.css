@@ -36,6 +36,11 @@
   font-size: 1rem;
   letter-spacing: 0.3px;
 }
+/* Safety: prevent any injected widget or long content from causing horizontal scroll */
+html, body {
+  max-width: 100%;
+  overflow-x: hidden;
+}
 
 @keyframes mantra-scroll {
   0% { transform: translateX(0); }
@@ -57,10 +62,92 @@
     font-size: 0.85rem;
   }
 
-  .mantra-track {
+.mantra-track {
     gap: 2rem;
   }
 }
+
+/* Translate widget container styling (global) */
+.google-translate-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: auto;
+  max-width: 120px;
+  padding: 0.15rem 0.35rem;
+  border-radius: 999px;
+  border: 1px solid rgba(36,28,26,0.12);
+  background: rgba(255,255,255,0.96);
+  color: #241C1A;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  box-sizing: border-box;
+  align-self: center;
+  line-height: 1;
+}
+
+.goog-te-banner-frame, iframe.skiptranslate {
+  display: none !important;
+  visibility: hidden !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+/* Ensure body isn't pushed down by the (hidden) banner */
+body {
+  top: 0px !important;
+  position: static !important;
+}
+
+/* Constrain the injected Google gadget/combo to avoid forcing navbar width */
+.goog-te-gadget, .goog-te-gadget-simple, .goog-te-combo, .goog-te-menu-value {
+  max-width: 160px !important;
+  min-width: 0 !important;
+  width: 100% !important;
+  box-sizing: border-box !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  flex-shrink: 0 !important;
+}
+
+/* Ensure header action buttons align vertically in the nav */
+.max-w-7xl .hidden.lg\:flex.items-center.gap-4 {
+  align-items: center;
+}
+
+.max-w-7xl .hidden.lg\:flex.items-center.gap-4 > button,
+.max-w-7xl .hidden.lg\:flex.items-center.gap-4 > a {
+  align-items: center;
+  display: inline-flex;
+}
+
+/* Tweak Book Consultation button spacing and vertical alignment */
+/* Ensure the phone link and Book Consultation button align vertically */
+.nav-actions {
+  align-items: center;
+  display: inline-flex;
+  gap: 0.75rem;
+}
+
+.nav-actions > a,
+.nav-actions > button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  max-height: 56px;
+}
+
+.nav-actions > button {
+  padding-top: 0.55rem !important;
+  padding-bottom: 0.55rem !important;
+}
+
+/* Avoid forcing global white-space changes which break intended site behavior (marquee etc.).
+   The translate gadget is constrained directly above to prevent overflow. */
 
 .mahavidya-card {
   position: relative;
@@ -160,6 +247,40 @@
   min-height: 3rem;
 }
 
+.google-translate-container {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 220px;
+  max-width: 320px;
+  padding: 0.35rem 0.65rem;
+  border-radius: 999px;
+  border: 1px solid rgba(36,28,26,0.12);
+  background: rgba(255,255,255,0.96);
+  color: #241C1A;
+  font-family: 'Cinzel', serif;
+  font-size: 0.85rem;
+}
+
+.google-translate-left {
+  margin-right: 12px;
+}
+
+body.rtl-translate,
+html[dir="rtl"] body {
+  direction: rtl;
+}
+
+body.rtl-translate .google-translate-container,
+html[dir="rtl"] .google-translate-container {
+  direction: rtl;
+}
+
+[translate="no"],
+.notranslate {
+  unicode-bidi: isolate;
+}
+
 @media (max-width: 640px) {
   .mahavidya-card {
     padding: 1.4rem 1.1rem 1rem;
@@ -181,4 +302,37 @@
     font-size: 0.85rem;
   }
 }
+
+/* Language popup styles */
+.lang-popup-overlay{
+  position: fixed;
+  inset: 0;
+  background: rgba(46,7,12,0.75);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 2000;
+  padding: 1rem;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .28s ease, visibility .28s ease;
+}
+.lang-popup-overlay.show{ opacity: 1; visibility: visible; }
+.lang-popup-box{ background: var(--cream, #fffaf3); border: 2px solid var(--gold, #c9a227); border-radius: 16px; padding: 2.2rem 1.8rem; max-width: 480px; width: 100%; text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,.35); transform: scale(0.96); transition: transform .28s ease; }
+.lang-popup-overlay.show .lang-popup-box{ transform: scale(1); }
+.lang-popup-icon{ font-size: 2rem; margin-bottom: .5rem; }
+.lang-popup-title{ font-family: var(--font-dev, 'Noto Serif Devanagari'), serif; color: var(--maroon-800, #5c1119); font-size: 1.4rem; display: flex; flex-direction: column; gap: .2rem; margin-bottom: .4rem; }
+.lang-popup-sub{ font-family: var(--font-en, 'Cinzel'), serif; font-style: italic; font-size: 1rem; color: var(--saffron, #e8622c); }
+.lang-popup-desc{ font-size: .85rem; color: #5a4d48; margin-bottom: 1.4rem; }
+.lang-popup-grid{ display: grid; grid-template-columns: repeat(2, 1fr); gap: .8rem; margin-bottom: 1.4rem; }
+.lang-option{ background: #fff; border: 1.5px solid #e6d9c8; border-radius: 10px; padding: .8rem .6rem; cursor: pointer; display: flex; flex-direction: column; gap: .2rem; transition: border-color .18s ease, transform .12s ease; user-select: none; }
+.lang-option:hover{ border-color: var(--saffron, #e8622c); transform: translateY(-2px); }
+.lang-native{ font-weight: 600; font-size: 1rem; color: var(--maroon-800, #5c1119); }
+.lang-en{ font-size: .72rem; color: #8a7a6f; }
+.lang-popup-close{ background: none; border: none; color: var(--saffron, #e8622c); font-size: .82rem; text-decoration: underline; cursor: pointer; margin-top: .2rem; }
+@media(max-width:480px){ .lang-popup-grid{ grid-template-columns: repeat(2, 1fr); gap: .6rem; } .lang-popup-box{ padding: 1.6rem 1.2rem; } }
+
+/* small circular language-change button in nav */
+.nav-lang-btn{ background: none; border: 1px solid var(--gold, #c9a227); border-radius: 50%; width: 34px; height: 34px; cursor: pointer; font-size: 1rem; display: inline-flex; align-items: center; justify-content: center; color: var(--maroon-800, #5c1119); }
 

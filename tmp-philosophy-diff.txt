@@ -1,0 +1,264 @@
+﻿diff --git a/public/philosophy.css b/public/philosophy.css
+index 09981958..5828df8b 100644
+--- a/public/philosophy.css
++++ b/public/philosophy.css
+@@ -398,128 +398,4 @@ img {
+   opacity: 0.28;
+   filter: brightness(0.92);
+   z-index: 0;
+-  pointer-events: none;
+-}
+-
+-@media (max-width: 1100px) {
+-  .philosophy-journey::before {
+-    display: none;
+-  }
+-}
+-
+-.philosophy-journey > * {
+-  position: relative;
+-  z-index: 1;
+-}
+-
+-.section-block {
+-  background: rgba(255,255,255,0.96);
+-  backdrop-filter: blur(16px);
+-  border: 1px solid rgba(255,255,255,0.88);
+-}
+-
+-.section-block h2 {
+-  margin-top: 0;
+-  margin-bottom: 18px;
+-  font-size: 2rem;
+-  letter-spacing: -0.04em;
+-  line-height: 1.1;
+-  color: #241C1A;
+-  font-family: 'Cinzel', serif;
+-}
+-
+-.section-block p {
+-  margin: 0 0 18px;
+-  line-height: 1.85;
+-  color: #3E2F28;
+-  font-size: 1rem;
+-}
+-
+-.section-block p:last-child {
+-  margin-bottom: 0;
+-}
+-
+-.section-highlight {
+-  background: linear-gradient(180deg, rgba(201,162,39,0.08), rgba(255,255,255,0.9));
+-}
+-
+-.section-highlight blockquote {
+-  margin: 0 0 18px;
+-  padding: 28px 30px;
+-  border-left: 5px solid #C9A227;
+-  background: rgba(232,98,44,0.05);
+-  font-size: 1.05rem;
+-  line-height: 1.85;
+-  color: #241C1A;
+-  font-style: italic;
+-}
+-
+-.page-footer {
+-  margin-top: 60px;
+-  padding-top: 30px;
+-  border-top: 1px solid rgba(201,162,39,0.18);
+-  display: grid;
+-  gap: 8px;
+-  color: #5C1119;
+-  font-size: 0.95rem;
+-  line-height: 1.8;
+-}
+-
+-@media (max-width: 960px) {
+-  .page-shell {
+-    padding: 24px 18px 48px;
+-  }
+-
+-  .hero-section {
+-    grid-template-columns: 1fr;
+-  }
+-
+-  .hero-copy {
+-    max-width: 100%;
+-  }
+-
+-  .editorial-grid {
+-    grid-template-columns: 1fr;
+-  }
+-
+-  .editorial-aside {
+-    position: static;
+-  }
+-
+-  .editorial-body {
+-    padding-left: 0;
+-  }
+-
+-  .editorial-body::before {
+-    display: none;
+-  }
+-
+-  .section-block {
+-    padding: 28px 26px 26px;
+-  }
+-
+-  .section-marker {
+-    left: 18px;
+-    top: 18px;
+-  }
+-}
+-
+-@media (max-width: 640px) {
+-  .page-header {
+-    flex-direction: column;
+-    align-items: flex-start;
+-    gap: 16px;
+-  }
+-
+-  .page-nav {
+-    gap: 12px;
+-  }
+-
+-  .hero-summary {
+-    font-size: 0.98rem;
+-  }
+-
+-  .hero-image-wrap {
+-    min-height: 320px;
+-  }
+ }
+diff --git a/public/philosophy.html b/public/philosophy.html
+index c300bcad..e6e5a2cc 100644
+--- a/public/philosophy.html
++++ b/public/philosophy.html
+@@ -152,124 +152,4 @@
+                   reflection, and points toward heartfelt practice. His words are meant to steady the mind and embolden the soul.
+                 </p>
+               </div>
+-
+-              <div class="section-block" id="kutumb" data-number="12" data-chakra="throat">
+-                <h2>αñòαÑüαñƒαÑüαñéαñ¼ ΓÇö Family</h2>
+-                <p>
+-                  Family is the first altar. Guruvarya teaches that spiritual life is not separate from family life; it is cultivated through service, respect, and
+-                  care within the home. The trustΓÇÖs work honors this truth by supporting families, education, and the bonds that hold communities together.
+-                </p>
+-              </div>
+-
+-              <div class="section-block" id="yuvak-vichar" data-number="13" data-chakra="third-eye">
+-                <h2>αñ»αÑüαñ╡αñò αñ╡αñ┐αñÜαñ╛αñ░ ΓÇö Youth Thought</h2>
+-                <p>
+-                  Young hearts are the living hope of the tradition. Guruvarya encourages todayΓÇÖs youth to carry ancient wisdom into modern life with confidence,
+-                  compassion, and clarity. The path is not an escape from the world ΓÇö it is a way to transform it from within.
+-                </p>
+-              </div>
+-
+-              <div class="section-block" id="sankat" data-number="14" data-chakra="crown">
+-                <h2>αñ╕αñéαñòαñƒ ΓÇö Crisis</h2>
+-                <p>
+-                  Crisis is the great teacher. In times of difficulty, Guruvarya reminds seekers that hardship is not punishment but invitation: the invitation to
+-                  grow, to surrender, and to discover that the inner strength already exists.
+-                </p>
+-              </div>
+-
+-              <div class="section-block section-highlight" id="pillars">
+-                <h2>The Four Pillars of the Path</h2>
+-                <p>
+-                  The teachings are held by four pillars that support the whole journey: faith, service, daily discipline, and compassionate action. These pillars
+-                  ensure that devotion remains steady, practical, and transformative.
+-                </p>
+-                <ul class="pillar-list">
+-                  <li><strong>Faith:</strong> keep the heart anchored in devotion.</li>
+-                  <li><strong>Service:</strong> let your faith find form in loving action.</li>
+-                  <li><strong>Discipline:</strong> maintain consistent spiritual practice.</li>
+-                  <li><strong>Compassion:</strong> live with care for all beings.</li>
+-                </ul>
+-              </div>
+-
+-              <div class="section-block section-flow" id="daily-life">
+-                <h2>Daily Life ΓÇö A Simple Spiritual Way of Living</h2>
+-                <div class="steps-grid">
+-                  <div class="step-item"><span>1</span><strong>Begin with gratitude.</strong><p>Start the day with a quiet offering of thanks.</p></div>
+-                  <div class="step-item"><span>2</span><strong>Carry devotion into your work.</strong><p>Let every task reflect inner sincerity.</p></div>
+-                  <div class="step-item"><span>3</span><strong>Practice regularly.</strong><p>Make time for prayer, chanting, or meditation each day.</p></div>
+-                  <div class="step-item"><span>4</span><strong>Act honestly.</strong><p>Let duty and integrity guide your choices.</p></div>
+-                  <div class="step-item"><span>5</span><strong>Choose gentle speech.</strong><p>Speak with kindness and clarity.</p></div>
+-                  <div class="step-item"><span>6</span><strong>Serve others.</strong><p>Offer help without expectation.</p></div>
+-                  <div class="step-item"><span>7</span><strong>Reflect each evening.</strong><p>Review your day and recommit to the path.</p></div>
+-                </div>
+-              </div>
+-
+-              <div class="section-block section-signature">
+-                <h2>A Message to Every Seeker</h2>
+-                <p class="signature-line">
+-                  Live in dharma. Unite through duty. Let practice shape your peace. Seek strength in service, and let compassion be your guiding light.
+-                </p>
+-                <p class="signature-line">
+-                  When the heart is steady and the path remains humble, every challenge becomes an opportunity to deepen your devotion.
+-                </p>
+-                <p class="signature-tagline">
+-                  αñºαñ░αÑìαñ« ΓÇó αñ╢αñòαÑìαññαñ┐ ΓÇó αñ╕αÑçαñ╡αñ╛ ΓÇó αñòαñ░αÑìαññαñ╡αÑìαñ»
+-                </p>
+-              </div>
+-            </div>
+-          </section>
+-        </article>
+-      </main>
+-
+-      <footer class="page-footer">
+-        <p>Guruvarya Shri Prakashbhau Shinde | Sarvatmak Maharudra Parivar Trust</p>
+-        <p>Reg. No. E0009721(PUN) ΓÇó Dedicated to faith, service, and transformative wisdom.</p>
+-      </footer>
+-    </div>
+-
+-    <script>
+-      (function () {
+-        const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+-        const spineFill = document.querySelector('.spine-fill');
+-        const sectionBlocks = Array.from(document.querySelectorAll('.section-block'));
+-
+-        const observer = new IntersectionObserver((entries) => {
+-          entries.forEach(entry => {
+-            const target = entry.target;
+-            if (entry.isIntersecting) {
+-              target.classList.add('visible', 'in-view');
+-            }
+-          });
+-        }, {
+-          threshold: 0.22,
+-        });
+-
+-        sectionBlocks.forEach((section, index) => {
+-          if (!prefersReducedMotion) {
+-            const direction = (index % 2 === 0) ? 'left' : 'right';
+-            section.style.setProperty('--entry-direction', direction);
+-          }
+-          observer.observe(section);
+-        });
+-
+-        const updateSpine = () => {
+-          if (!spineFill) return;
+-          const bodyRect = document.querySelector('.editorial-body').getBoundingClientRect();
+-          const viewportHeight = window.innerHeight;
+-          const totalHeight = bodyRect.height - viewportHeight;
+-          const scrolled = Math.min(Math.max(window.scrollY - (bodyRect.top + window.scrollY - window.scrollY), 0), totalHeight);
+-          const progress = totalHeight > 0 ? (window.scrollY + viewportHeight - bodyRect.top) / (bodyRect.height + viewportHeight) : 0;
+-          spineFill.style.height = Math.min(100, Math.max(0, progress * 100)) + '%';
+-        };
+-
+-        if (!prefersReducedMotion) {
+-          window.addEventListener('scroll', updateSpine, { passive: true });
+-          window.addEventListener('resize', updateSpine, { passive: true });
+-          updateSpine();
+-        } else if (spineFill) {
+-          spineFill.style.height = '100%';
+-        }
+-      })();
+-    </script>
+-  </body>
+-</html>
++*** End Patch
+\ No newline at end of file

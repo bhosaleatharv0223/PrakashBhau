@@ -1,0 +1,80 @@
+﻿
+.section-highlight blockquote {
+  margin: 0 0 18px;
+  padding: 28px 30px;
+  border-left: 5px solid #C9A227;
+  background: rgba(232,98,44,0.05);
+  font-size: 1.05rem;
+  line-height: 1.85;
+  color: #241C1A;
+  font-style: italic;
+}
+
+@keyframes pulseGlow {
+  0% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
+  50% { transform: scale(1.15); box-shadow: 0 0 18px rgba(255,255,255,0.45); }
+  100% { transform: scale(1); box-shadow: 0 0 0 rgba(255,255,255,0); }
+}
+
+@media (max-width: 960px) {
+  .editorial-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .editorial-aside {
+    position: static;
+    top: auto;
+  }
+
+  .editorial-body {
+    grid-template-columns: 1fr;
+    padding-left: 0;
+  }
+
+  .sections-wrapper > .section-block,
+  .sections-wrapper > .section-block:nth-child(odd),
+  .sections-wrapper > .section-block:nth-child(even) {
+    grid-column: 1;
+    transform: translateX(0);
+  }
+
+  .section-block::before {
+    left: 0;
+    transform: translateX(-50%);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+
+  .section-block {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.section-block:last-of-type {
+  margin-bottom: 0;
+}
+
+.philosophy-journey {
+  position: relative;
+  background-color: transparent;
+  overflow: hidden;
+}
+
+.philosophy-journey::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background-image: url('/images/philosophy-bg.jpg');
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-position: center;
+  opacity: 0.28;
+  filter: brightness(0.92);
+  z-index: 0;
+}
