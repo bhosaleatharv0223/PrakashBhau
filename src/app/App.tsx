@@ -1,10 +1,7 @@
 import { useState, useEffect, useRef } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoImg from "@/imports/logo.png";
 import heroImg from "@/imports/Hero_section.jpeg";
-import RecognitionPage from "@/app/pages/RecognitionPage";
-import RecognitionGalleryPage from "@/app/pages/RecognitionGalleryPage";
 import {
   Phone, MessageCircle, Menu, X, ChevronDown,
   Star, Award, Users, Heart, BookOpen,
@@ -23,7 +20,7 @@ const mahavidyas = [
   { name: "Kali", devanagari: "काली", meaning: "Destroyer of ego and time — the fierce Mother beyond all form", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.31 PM (1).jpeg" },
   { name: "Tara", devanagari: "तारा", meaning: "The compassionate saviour — guide through darkness and the unknown", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.31 PM.jpeg" },
   { name: "Tripura Sundari", devanagari: "त्रिपुरसुंदरी", meaning: "Beauty of all three worlds — grace, perfection, and cosmic love", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.30 PM.jpeg" },
-  { name: "Bhuvaneshwari", devanagari: "भुवनेश्वरी", meaning: "Queen of the universe — sovereign of infinite space and creation" },
+  { name: "Bhuvaneshwari", devanagari: "भुवनेश्वरी", meaning: "Queen of the universe — sovereign of infinite space and creation", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.33 PM (2).jpeg" },
   { name: "Bhairavi", devanagari: "भैरवी", meaning: "The fierce one — dissolution, transformation, and inner fire", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.32 PM (1).jpeg" },
   { name: "Chinnamasta", devanagari: "छिन्नमस्ता", meaning: "The self-decapitated — radical self-sacrifice and transcendence", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.32 PM.jpeg" },
   { name: "Dhumavati", devanagari: "धूमावती", meaning: "The smoky widow — renunciation, solitude, and void-consciousness", image: "/WhatsApp Unknown 2026-07-27 at 10.03.58 PM/WhatsApp Image 2026-07-27 at 10.00.33 PM (1).jpeg" },
@@ -142,8 +139,6 @@ const achievements = [
 // ─── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
-  const location = useLocation();
-  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navVariant, setNavVariant] = useState<"default" | "hidden" | "floating">("default");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -211,15 +206,6 @@ export default function App() {
     setIsMenuOpen(false);
   };
 
-  const handleNavigateRoute = (path: string) => {
-    setIsMenuOpen(false);
-    if (path.startsWith("/")) {
-      navigate(path);
-      return;
-    }
-    scrollTo(path);
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -234,24 +220,11 @@ export default function App() {
     { label: "Who I Am", id: "who-i-am" },
     { label: "What I Think", id: "what-i-think" },
     { label: "What I Do", id: "what-i-do" },
-    { label: "Recognition", path: "/recognition" },
     { label: "Philosophy", href: "/philosophy.html" },
   ];
 
-  if (location.pathname === "/recognition") {
-    return <RecognitionPage onNavigateRoute={handleNavigateRoute} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} whatsappLink={WHATSAPP_LINK} activePath={location.pathname} />;
-  }
-
-  if (location.pathname === "/recognition/gallery") {
-    return <RecognitionGalleryPage onNavigateRoute={handleNavigateRoute} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} whatsappLink={WHATSAPP_LINK} activePath={location.pathname} />;
-  }
-
-  if (location.pathname === "/journey-and-recognition") {
-    return <RecognitionPage onNavigateRoute={handleNavigateRoute} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} whatsappLink={WHATSAPP_LINK} activePath="/recognition" />;
-  }
-
   return (
-    <div className="min-h-screen bg-[#FBF3E7] text-[#241C1A]" style={{ fontFamily: "'Poppins', sans-serif" }}>
+    <div className="min-h-screen bg-[#F7A93F] text-[#241C1A]" style={{ fontFamily: "'Poppins', sans-serif" }}>
 
       {/* ── Announcement Bar ── */}
       <div className="bg-[#5C1119] text-white py-2 px-4">
@@ -281,7 +254,7 @@ export default function App() {
               ? "sticky top-3 bg-transparent overflow-visible"
               : "sticky top-0 pointer-events-none opacity-0 -translate-y-6 overflow-visible"
         }`}
-        style={{ height: "80px", borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
+        style={{ height: "var(--navbar-height)", borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
       >
         <nav className={`mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu ${
           navVariant === "floating"
@@ -316,7 +289,7 @@ export default function App() {
               ) : (
                 <button
                   key={item.id ?? item.label}
-                  onClick={() => item.path ? handleNavigateRoute(item.path) : item.id ? scrollTo(item.id) : undefined}
+                  onClick={() => item.id ? scrollTo(item.id) : undefined}
                   className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
                   style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
@@ -357,7 +330,7 @@ export default function App() {
                   {item.label}
                 </a>
               ) : (
-                <button key={item.id ?? item.label} onClick={() => item.path ? handleNavigateRoute(item.path) : item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                <button key={item.id ?? item.label} onClick={() => item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
                   {item.label}
                 </button>
               )
@@ -366,7 +339,7 @@ export default function App() {
               <a href={`tel:${PHONE}`} className="flex items-center gap-2 px-4 py-3 text-[#5C1119] font-medium" style={{ fontFamily: "'Cinzel', serif" }}>
                 <Phone className="w-4 h-4" /> {PHONE}
               </a>
-              <button onClick={() => { setIsBookingOpen(true); setIsMenuOpen(false); }} className="w-full py-3.5 text-white font-bold rounded-xl tracking-wider" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)" }}>
+              <button onClick={() => { setIsBookingOpen(true); setIsMenuOpen(false); }} className="w-full py-3.5 text-white font-bold rounded-xl tracking-wider" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, var(--saffron), #D85A24)" }}>
                 Book Consultation
               </button>
             </div>
@@ -375,7 +348,7 @@ export default function App() {
       </header>
 
       {/* ── Hero Section ── */}
-      <section id="hero" className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden">
+      <section id="hero" ref={heroSectionRef} className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden" style={{ paddingTop: "calc(var(--navbar-height) + 12px)" }}>
         <div className="absolute inset-0">
           <picture>
             <source media="(max-width: 767px)" srcSet="/prakshbhau.jpeg" />
@@ -434,7 +407,7 @@ export default function App() {
                 <button
                   onClick={() => setIsBookingOpen(true)}
                   className="flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-full transition-all duration-200 text-sm tracking-[0.2em] hover:-translate-y-0.5"
-                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #F6A24E, #D85A24)", boxShadow: "0 18px 45px rgba(232,98,44,0.28)" }}
+                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, var(--saffron), #D85A24)", boxShadow: "0 18px 45px rgba(232,98,44,0.28)" }}
                 >
                   <Phone className="w-4 h-4" /> Book Consultation
                 </button>
@@ -519,17 +492,17 @@ export default function App() {
       {/* ──────────────────────────────────────────────── */}
       {/* WHO I AM                                        */}
       {/* ──────────────────────────────────────────────── */}
-      <section id="who-i-am" className="bg-[#5C1119] py-24">
+      <section id="who-i-am" className="py-24" style={{ background: "radial-gradient(circle at 18% 12%, rgba(255, 207, 139, 0.32), transparent 34%), linear-gradient(135deg, var(--saffron, #E8622C), #DA642B)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
           {/* Section header */}
           <div className="text-center mb-20">
-            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>DISCOVER THE GURUVARYA</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-5" style={{ fontFamily: "'Cinzel', serif" }}>Who I Am</h2>
+            <p className="text-[#2C0206] text-xs tracking-[0.4em] mb-3 font-bold" style={{ fontFamily: "'Cinzel', serif" }}>DISCOVER THE GURUVARYA</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-[#2C0206] mb-5" style={{ fontFamily: "'Cinzel', serif" }}>Who I Am</h2>
             <div className="flex items-center justify-center gap-4">
-              <span className="w-16 h-px bg-[#C9A227]" />
-              <span className="text-[#C9A227] text-xl" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>मी कोण आहे</span>
-              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="w-16 h-px bg-[#2C0206]/55" />
+              <span className="text-[#2C0206] text-xl font-semibold" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>मी कोण आहे</span>
+              <span className="w-16 h-px bg-[#2C0206]/55" />
             </div>
           </div>
 
@@ -545,25 +518,25 @@ export default function App() {
                 </div>
               </div>
             </div>
-            <div className="lg:col-span-3 space-y-6">
-              <h3 className="text-2xl font-bold text-[#C9A227]" style={{ fontFamily: "'Cinzel', serif" }}>A Life Surrendered to the Divine</h3>
-              <p className="text-white/82 leading-8 text-base">
+            <div className="lg:col-span-3 space-y-6 rounded-3xl p-8 sm:p-10" style={{ background: "#FFFFFF", border: "1px solid rgba(44,2,6,0.08)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 8px 28px rgba(0,0,0,0.1)" }}>
+              <h3 className="text-2xl font-bold text-[#2C0206]" style={{ fontFamily: "'Cinzel', serif" }}>A Life Surrendered to the Divine</h3>
+              <p className="text-[#241C1A] leading-8 text-base">
                 Guruvarya Shri Prakashbhau Shinde (Mathadhipati) has dedicated over{" "}
-                <span className="text-[#C9A227] font-semibold">14 years</span> to the intense worship and tapasya of Lord Shri Hanuman — a journey of absolute surrender, rigorous sadhana, and unbroken devotion that has made him a spiritual beacon for thousands across Maharashtra and beyond.
+                <span className="text-[#2C0206] font-bold">14 years</span> to the intense worship and tapasya of Lord Shri Hanuman — a journey of absolute surrender, rigorous sadhana, and unbroken devotion that has made him a spiritual beacon for thousands across Maharashtra and beyond.
               </p>
-              <p className="text-white/82 leading-8 text-base">
+              <p className="text-[#241C1A] leading-8 text-base">
                 He is regarded as blessed with the grace of the{" "}
-                <span className="text-[#C9A227] font-semibold">Dasha Mahavidya</span> — the ten supreme tantric manifestations of the Goddess — a distinction acknowledged by revered saints, scholars, and spiritual masters. He holds a{" "}
-                <span className="text-[#C9A227] font-semibold">Doctorate in Spiritual Education</span> and serves as{" "}
-                <span className="text-[#C9A227] font-semibold">Mathadhipati</span>, guiding his Math and devotees with wisdom, authority, and boundless compassion.
+                <span className="text-[#2C0206] font-bold">Dasha Mahavidya</span> — the ten supreme tantric manifestations of the Goddess — a distinction acknowledged by revered saints, scholars, and spiritual masters. He holds a{" "}
+                <span className="text-[#2C0206] font-bold">Doctorate in Spiritual Education</span> and serves as{" "}
+                <span className="text-[#2C0206] font-bold">Mathadhipati</span>, guiding his Math and devotees with wisdom, authority, and boundless compassion.
               </p>
-              <p className="text-white/82 leading-8 text-base">
+              <p className="text-[#241C1A] leading-8 text-base">
                 As the founding force behind{" "}
-                <span className="text-[#C9A227] font-semibold">Sarvatmak Maharudra Parivar Trust</span>{" "}
+                <span className="text-[#2C0206] font-bold">Sarvatmak Maharudra Parivar Trust</span>{" "}
                 (Reg. No. E0009721(PUN)), he has extended his mission into education, healthcare, and humanitarian service — because for him, true devotion must always translate into seva.
               </p>
-              <blockquote className="mt-4 px-6 py-4 rounded-xl" style={{ border: "1px solid rgba(201,162,39,0.35)", background: "rgba(201,162,39,0.05)" }}>
-                <p className="text-[#C9A227] italic text-sm leading-relaxed" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+              <blockquote className="mt-4 px-6 py-4 rounded-xl" style={{ border: "1px solid rgba(44,2,6,0.16)", background: "#FFF7F1" }}>
+                <p className="text-[#2C0206] italic text-sm leading-relaxed font-semibold" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
                   "श्रद्धा आणि साबुरी — हीच माझ्या जीवनाची आणि उपासनेची शिकवण आहे।"
                 </p>
               </blockquote>
@@ -572,20 +545,20 @@ export default function App() {
 
           {/* Spiritual Journey Timeline */}
           <div className="mb-24">
-            <h3 className="text-2xl font-bold text-center text-[#C9A227] mb-14" style={{ fontFamily: "'Cinzel', serif" }}>The Spiritual Journey</h3>
+            <h3 className="text-2xl font-bold text-center text-[#2C0206] mb-14" style={{ fontFamily: "'Cinzel', serif" }}>The Spiritual Journey</h3>
             <div className="relative space-y-6">
-              <div className="absolute left-[4.5rem] top-0 bottom-0 w-px hidden md:block" style={{ background: "linear-gradient(to bottom, transparent, rgba(201,162,39,0.4), rgba(201,162,39,0.4), transparent)" }} />
+              <div className="absolute left-[4.5rem] top-0 bottom-0 w-px hidden md:block" style={{ background: "linear-gradient(to bottom, transparent, rgba(44,2,6,0.35), rgba(44,2,6,0.35), transparent)" }} />
               {timeline.map((item, i) => (
                 <div key={i} className="flex gap-6 items-start group">
                   <div className="flex-shrink-0 flex flex-col items-center gap-1 w-16">
                     <div className="w-10 h-10 rounded-full flex items-center justify-center text-xs font-bold z-10 flex-shrink-0 shadow-lg transition-all duration-200 group-hover:scale-110" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #C9A227, #A87D10)", color: "#3A0B10" }}>
                       {i + 1}
                     </div>
-                    <span className="text-[#C9A227]/70 text-[10px] font-bold tracking-wide text-center" style={{ fontFamily: "'Cinzel', serif" }}>{item.year}</span>
+                    <span className="text-[#2C0206] text-[10px] font-bold tracking-wide text-center" style={{ fontFamily: "'Cinzel', serif" }}>{item.year}</span>
                   </div>
-                  <div className="flex-1 rounded-2xl p-6 transition-all duration-200 group-hover:bg-white/8" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.18)" }}>
-                    <h4 className="font-bold text-white text-base mb-2 group-hover:text-[#C9A227] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>{item.title}</h4>
-                    <p className="text-white/65 text-sm leading-7">{item.desc}</p>
+                  <div className="flex-1 rounded-2xl p-6 transition-all duration-200 group-hover:-translate-y-1" style={{ background: "#FFFFFF", border: "1px solid rgba(44,2,6,0.08)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 6px 20px rgba(0,0,0,0.08)" }}>
+                    <h4 className="font-bold text-[#2C0206] text-base mb-2 transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>{item.title}</h4>
+                    <p className="text-[#241C1A] text-sm leading-7">{item.desc}</p>
                   </div>
                 </div>
               ))}
@@ -595,9 +568,9 @@ export default function App() {
           {/* Dasha Mahavidya */}
           <div>
             <div className="text-center mb-12">
-              <h3 className="text-2xl font-bold text-[#C9A227] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Blessed by the Dasha Mahavidya</h3>
-              <p className="text-white/55 text-lg" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>दश महाविद्या कृपा</p>
-              <p className="text-white/50 text-sm mt-3 max-w-2xl mx-auto leading-7">
+              <h3 className="text-2xl font-bold text-[#2C0206] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Blessed by the Dasha Mahavidya</h3>
+              <p className="text-[#2C0206]/85 text-lg" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>दश महाविद्या कृपा</p>
+              <p className="text-[#241C1A] text-sm mt-3 max-w-2xl mx-auto leading-7">
                 Guruvarya is blessed with the living grace of all ten Mahavidyas — the supreme tantric manifestations of the Divine Mother, each governing a distinct cosmic principle and force.
               </p>
             </div>
@@ -623,8 +596,8 @@ export default function App() {
                     )}
                   </div>
                   <div className="mahavidya-badge">{i + 1}</div>
-                  <div className="text-[#C9A227] font-bold text-sm mb-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{m.devanagari}</div>
-                  <div className="text-white text-xs font-semibold mb-2" style={{ fontFamily: "'Cinzel', serif", letterSpacing: "0.08em", textTransform: "uppercase" }}>{m.name}</div>
+                  <div className="text-[#581214] font-bold text-sm mb-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{m.devanagari}</div>
+                  <div className="text-[#2C0206] text-xs font-bold mb-2" style={{ fontFamily: "'Cinzel', serif", letterSpacing: "0.08em", textTransform: "uppercase" }}>{m.name}</div>
                   <p className="mahavidya-meaning">{m.meaning}</p>
                 </div>
               ))}
@@ -725,17 +698,17 @@ export default function App() {
       {/* ──────────────────────────────────────────────── */}
       {/* WHAT I DO                                       */}
       {/* ──────────────────────────────────────────────── */}
-      <section id="what-i-do" className="bg-[#5C1119] py-24">
+      <section id="what-i-do" className="py-24" style={{ background: "radial-gradient(circle at 82% 14%, rgba(255, 207, 139, 0.28), transparent 32%), linear-gradient(135deg, var(--saffron, #E8622C), #DA642B)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
 
           {/* Section header */}
           <div className="text-center mb-20">
-            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>SERVICES & MISSION</p>
-            <h2 className="text-4xl sm:text-5xl font-bold text-white mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What I Do</h2>
+            <p className="text-[#2C0206] text-xs tracking-[0.4em] mb-3 font-bold" style={{ fontFamily: "'Cinzel', serif" }}>SERVICES & MISSION</p>
+            <h2 className="text-4xl sm:text-5xl font-bold text-[#2C0206] mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What I Do</h2>
             <div className="flex items-center justify-center gap-4">
-              <span className="w-16 h-px bg-[#C9A227]" />
-              <span className="text-white text-xl" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>माझे कार्य</span>
-              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="w-16 h-px bg-[#2C0206]/55" />
+              <span className="text-[#2C0206] text-xl font-semibold" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>माझे कार्य</span>
+              <span className="w-16 h-px bg-[#2C0206]/55" />
             </div>
           </div>
 
@@ -744,23 +717,23 @@ export default function App() {
             {services.map((s, i) => (
               <div
                 key={i}
-                className="rounded-2xl p-7 flex flex-col transition-all duration-200 group"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.18)" }}
-                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(201,162,39,0.09)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.55)"; }}
-                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.background = "rgba(255,255,255,0.04)"; (e.currentTarget as HTMLDivElement).style.borderColor = "rgba(201,162,39,0.18)"; }}
+                className="rounded-2xl p-7 flex flex-col transition-all duration-200 group hover:-translate-y-1.5"
+                style={{ background: "#FFFFFF", border: "1px solid rgba(44,2,6,0.08)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 6px 20px rgba(0,0,0,0.08)" }}
+                onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 14px 32px rgba(0,0,0,0.14)"; }}
+                onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)"; }}
               >
-                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-200" style={{ background: "rgba(201,162,39,0.18)" }}>
-                  <s.Icon className="w-6 h-6 text-[#C9A227]" />
+                <div className="w-14 h-14 rounded-xl flex items-center justify-center mb-5 transition-all duration-200" style={{ background: "rgba(232,98,44,0.13)" }}>
+                  <s.Icon className="w-6 h-6 text-[#5C1119]" />
                 </div>
-                <p className="text-[#C9A227]/60 text-xs mb-1" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{s.devanagari}</p>
-                <h3 className="font-bold text-white text-lg mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{s.title}</h3>
-                <p className="text-white/62 text-sm leading-7 flex-1 mb-6">{s.desc}</p>
+                <p className="text-[#581214] text-xs mb-1 font-semibold" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{s.devanagari}</p>
+                <h3 className="font-bold text-[#2C0206] text-lg mb-3" style={{ fontFamily: "'Cinzel', serif" }}>{s.title}</h3>
+                <p className="text-[#333333] text-sm leading-7 flex-1 mb-6">{s.desc}</p>
                 <button
                   onClick={() => setIsBookingOpen(true)}
-                  className="flex items-center gap-2 text-sm font-semibold text-[#C9A227] hover:text-white transition-colors"
+                  className="flex items-center gap-2 text-sm font-bold text-[#E8622C] underline-offset-4 hover:underline transition-colors"
                   style={{ fontFamily: "'Cinzel', serif" }}
                 >
-                  {s.cta} <ChevronRight className="w-4 h-4" />
+                  {s.cta} <ChevronRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-1" />
                 </button>
               </div>
             ))}
@@ -769,22 +742,24 @@ export default function App() {
           {/* Social Works */}
           <div className="mb-24">
             <div className="text-center mb-12">
-              <h3 className="text-2xl font-bold text-[#C9A227] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Social Works & Seva</h3>
-              <p className="text-white/55" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>सामाजिक सेवा कार्य — Sarvatmak Maharudra Parivar Trust</p>
+              <h3 className="text-2xl font-bold text-[#2C0206] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Social Works & Seva</h3>
+              <p className="text-[#241C1A]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>सामाजिक सेवा कार्य — Sarvatmak Maharudra Parivar Trust</p>
             </div>
             <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-5">
               {socialWorks.map((w, i) => (
                 <div
                   key={i}
-                  className="flex gap-4 items-start rounded-2xl p-6 transition-colors"
-                  style={{ background: "rgba(255,255,255,0.035)", border: "1px solid rgba(201,162,39,0.14)" }}
+                  className="flex gap-4 items-start rounded-2xl p-6 transition-all duration-200 hover:-translate-y-1.5"
+                  style={{ background: "#FFFFFF", border: "1px solid rgba(44,2,6,0.08)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 6px 20px rgba(0,0,0,0.08)" }}
+                  onMouseEnter={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 14px 32px rgba(0,0,0,0.14)"; }}
+                  onMouseLeave={e => { (e.currentTarget as HTMLDivElement).style.boxShadow = "0 6px 20px rgba(0,0,0,0.08)"; }}
                 >
-                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(232,98,44,0.18)" }}>
-                    <w.Icon className="w-5 h-5 text-[#E8622C]" />
+                  <div className="w-11 h-11 rounded-xl flex items-center justify-center flex-shrink-0" style={{ background: "rgba(232,98,44,0.13)" }}>
+                    <w.Icon className="w-5 h-5 text-[#5C1119]" />
                   </div>
                   <div>
-                    <h4 className="font-semibold text-white text-sm mb-1.5" style={{ fontFamily: "'Cinzel', serif" }}>{w.title}</h4>
-                    <p className="text-white/52 text-xs leading-6">{w.desc}</p>
+                    <h4 className="font-semibold text-[#2C0206] text-sm mb-1.5" style={{ fontFamily: "'Cinzel', serif" }}>{w.title}</h4>
+                    <p className="text-[#333333] text-xs leading-6">{w.desc}</p>
                   </div>
                 </div>
               ))}
@@ -792,19 +767,19 @@ export default function App() {
           </div>
 
           {/* Trust Section with Impact Numbers */}
-          <div className="rounded-3xl p-8 sm:p-12" style={{ background: "rgba(255,255,255,0.05)", border: "1px solid rgba(201,162,39,0.3)" }}>
+          <div className="rounded-3xl p-8 sm:p-12" style={{ background: "#FFFFFF", border: "1px solid rgba(44,2,6,0.08)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 8px 28px rgba(0,0,0,0.1)" }}>
             <div className="grid lg:grid-cols-2 gap-10 items-center">
               <div>
-                <p className="text-[#C9A227]/70 text-xs tracking-[0.35em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>FOUNDER & GUIDING FORCE</p>
-                <h3 className="text-2xl sm:text-3xl font-bold text-white mb-2" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
+                <p className="text-[#2C0206] text-xs tracking-[0.35em] mb-3 font-bold" style={{ fontFamily: "'Cinzel', serif" }}>FOUNDER & GUIDING FORCE</p>
+                <h3 className="text-2xl sm:text-3xl font-bold text-[#2C0206] mb-2" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
                   सर्वात्मक महारुद्र परिवार ट्रस्ट
                 </h3>
-                <p className="font-semibold text-lg mb-1" style={{ fontFamily: "'Cinzel', serif", color: "#C9A227" }}>Sarvatmak Maharudra Parivar Trust</p>
-                <p className="text-white/45 text-xs mb-5 tracking-wider" style={{ fontFamily: "'Cinzel', serif" }}>Reg. No. E0009721(PUN)</p>
-                <p className="text-white/72 text-sm leading-7 mb-4">
-                  <em className="text-[#C9A227] not-italic font-medium">"Serving Humanity with Faith, Compassion & Commitment"</em>
+                <p className="font-semibold text-lg mb-1" style={{ fontFamily: "'Cinzel', serif", color: "#2C0206" }}>Sarvatmak Maharudra Parivar Trust</p>
+                <p className="text-[#241C1A]/75 text-xs mb-5 tracking-wider" style={{ fontFamily: "'Cinzel', serif" }}>Reg. No. E0009721(PUN)</p>
+                <p className="text-[#241C1A] text-sm leading-7 mb-4">
+                  <em className="text-[#2C0206] not-italic font-bold">"Serving Humanity with Faith, Compassion & Commitment"</em>
                 </p>
-                <p className="text-white/62 text-sm leading-7 mb-8">
+                <p className="text-[#241C1A] text-sm leading-7 mb-8">
                   A government-registered charitable trust engaged in education, healthcare, animal welfare, blood donation, and humanitarian relief across Maharashtra — always guided by the principle that bhakti finds its highest expression in seva.
                 </p>
                 <a
@@ -819,10 +794,10 @@ export default function App() {
               </div>
               <div className="grid grid-cols-2 gap-4">
                 {impactNumbers.map((n, i) => (
-                  <div key={i} className="rounded-2xl p-7 text-center transition-all duration-200" style={{ background: "rgba(201,162,39,0.1)", border: "1px solid rgba(201,162,39,0.28)" }}>
-                    <div className="text-4xl font-bold mb-2" style={{ fontFamily: "'Cinzel', serif", color: "#C9A227" }}>{n.number}</div>
-                    <div className="text-white text-xs font-semibold mb-1">{n.label}</div>
-                    <div className="text-white/45 text-xs" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{n.sub}</div>
+                  <div key={i} className="rounded-2xl p-7 text-center transition-all duration-200 hover:-translate-y-1" style={{ background: "#FFF7F1", border: "1px solid rgba(44,2,6,0.1)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 6px 18px rgba(0,0,0,0.07)" }}>
+                    <div className="text-4xl font-bold mb-2" style={{ fontFamily: "'Cinzel', serif", color: "#2C0206" }}>{n.number}</div>
+                    <div className="text-[#241C1A] text-xs font-semibold mb-1">{n.label}</div>
+                    <div className="text-[#241C1A]/75 text-xs" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>{n.sub}</div>
                   </div>
                 ))}
               </div>
@@ -863,35 +838,35 @@ export default function App() {
       </section>
 
       {/* ── Testimonials ── */}
-      <section className="bg-[#5C1119] py-24">
+      <section className="py-24" style={{ background: "radial-gradient(circle at 18% 12%, rgba(255, 207, 139, 0.28), transparent 32%), linear-gradient(135deg, var(--saffron, #E8622C), #DA642B)" }}>
         <div className="max-w-7xl mx-auto px-4 sm:px-6">
           <div className="text-center mb-14">
-            <p className="text-[#C9A227]/70 text-xs tracking-[0.4em] mb-3" style={{ fontFamily: "'Cinzel', serif" }}>DEVOTEE VOICES</p>
-            <h2 className="text-4xl font-bold text-white mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What Devotees Say</h2>
+            <p className="text-[#2C0206] text-xs tracking-[0.4em] mb-3 font-bold" style={{ fontFamily: "'Cinzel', serif" }}>DEVOTEE VOICES</p>
+            <h2 className="text-4xl font-bold text-[#2C0206] mb-5" style={{ fontFamily: "'Cinzel', serif" }}>What Devotees Say</h2>
             <div className="flex items-center justify-center gap-4">
-              <span className="w-16 h-px bg-[#C9A227]" />
-              <span className="text-white" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>भक्तांचे अनुभव</span>
-              <span className="w-16 h-px bg-[#C9A227]" />
+              <span className="w-16 h-px bg-[#2C0206]/55" />
+              <span className="text-[#2C0206] font-semibold" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>भक्तांचे अनुभव</span>
+              <span className="w-16 h-px bg-[#2C0206]/55" />
             </div>
           </div>
           <div className="grid md:grid-cols-3 gap-6">
             {testimonials.map((t, i) => (
               <div
                 key={i}
-                className="rounded-2xl p-8 transition-all duration-200"
-                style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(201,162,39,0.2)" }}
+                className="rounded-2xl p-8 transition-all duration-200 hover:-translate-y-1.5"
+                style={{ background: "#FFFFFF", border: "1px solid rgba(44,2,6,0.08)", borderBottom: "3px solid var(--saffron, #E8622C)", boxShadow: "0 6px 20px rgba(0,0,0,0.08)" }}
               >
                 <div className="flex gap-1 mb-5">
                   {Array.from({ length: t.stars }).map((_, j) => (
                     <Star key={j} className="w-4 h-4" style={{ fill: "#C9A227", color: "#C9A227" }} />
                   ))}
                 </div>
-                <p className="text-white/80 text-sm leading-8 mb-6 italic" style={{ fontFamily: "'Libre Baskerville', Georgia, serif" }}>
+                <p className="text-[#333333] text-sm leading-8 mb-6 italic" style={{ fontFamily: "'Libre Baskerville', Georgia, serif" }}>
                   "{t.text}"
                 </p>
                 <div>
-                  <div className="font-semibold text-[#C9A227] text-sm" style={{ fontFamily: "'Cinzel', serif" }}>{t.name}</div>
-                  <div className="flex items-center gap-1 text-white/45 text-xs mt-1">
+                  <div className="font-semibold text-[#2C0206] text-sm" style={{ fontFamily: "'Cinzel', serif" }}>{t.name}</div>
+                  <div className="flex items-center gap-1 text-[#333333]/75 text-xs mt-1">
                     <MapPin className="w-3 h-3" /> {t.location}
                   </div>
                 </div>

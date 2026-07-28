@@ -65,11 +65,12 @@
 .mahavidya-card {
   position: relative;
   overflow: hidden;
-  padding: 1.75rem 1.5rem 1.2rem;
+  padding: 1.5rem 1.25rem 1rem;
   border-radius: 2rem;
-  border: 1px solid rgba(201,162,39,0.15);
-  background: radial-gradient(circle at top, rgba(92,17,25,0.95), #2e070c 42%, #120205 100%);
-  box-shadow: 0 24px 60px rgba(0,0,0,0.18);
+  border: 1px solid rgba(44,2,6,0.08);
+  border-bottom: 3px solid var(--saffron, #E8622C);
+  background: #FFFFFF;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.08);
   transition: transform 0.28s ease, box-shadow 0.28s ease, border-color 0.28s ease;
   text-align: center;
 }
@@ -78,8 +79,8 @@
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(circle at top right, rgba(255,255,255,0.08), transparent 32%);
-  opacity: 0.08;
+  background: radial-gradient(circle at top right, rgba(232,98,44,0.08), transparent 34%);
+  opacity: 1;
   pointer-events: none;
 }
 
@@ -90,7 +91,7 @@
   right: 8%;
   width: 110px;
   height: 110px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='2'/%3E%3Cpath d='M30,55 C40,38 60,38 70,55' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='2'/%3E%3Cpath d='M30,62 C40,80 60,80 70,62' fill='none' stroke='rgba(255,255,255,0.08)' stroke-width='2'/%3E%3C/svg%3E");
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='40' fill='none' stroke='rgba(92,17,25,0.1)' stroke-width='2'/%3E%3Cpath d='M30,55 C40,38 60,38 70,55' fill='none' stroke='rgba(92,17,25,0.1)' stroke-width='2'/%3E%3Cpath d='M30,62 C40,80 60,80 70,62' fill='none' stroke='rgba(92,17,25,0.1)' stroke-width='2'/%3E%3C/svg%3E");
   background-size: contain;
   background-repeat: no-repeat;
   opacity: 0.06;
@@ -99,18 +100,18 @@
 
 .mahavidya-card:hover {
   transform: translateY(-6px);
-  box-shadow: 0 32px 90px rgba(0,0,0,0.25);
-  border-color: rgba(201,162,39,0.45);
+  box-shadow: 0 14px 32px rgba(0,0,0,0.14);
+  border-color: rgba(44,2,6,0.16);
 }
 
 .mahavidya-figure {
-  margin-bottom: 1rem;
+  margin-bottom: 0.85rem;
 }
 
 .mahavidya-avatar {
-  width: 130px;
-  height: 130px;
-  margin: 0 auto 1rem;
+  width: 150px;
+  height: 150px;
+  margin: 0 auto 0.75rem;
   border-radius: 1.4rem;
   padding: 4px;
   background: radial-gradient(circle, rgba(201,162,39,0.65), rgba(255,209,121,0.12));
@@ -128,8 +129,8 @@
 }
 
 .mahavidya-placeholder {
-  background: radial-gradient(circle at top, rgba(255,255,255,0.12), rgba(255,255,255,0.04));
-  color: rgba(255,255,255,0.72);
+  background: #FFF7F1;
+  color: var(--maroon-800);
   font-family: var(--font-dev);
   font-size: 2.75rem;
   line-height: 1;
@@ -143,16 +144,16 @@
   margin: 0 auto 0.85rem;
   display: grid;
   place-items: center;
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.14);
-  color: var(--gold);
+  background: rgba(232,98,44,0.13);
+  border: 1px solid rgba(232,98,44,0.25);
+  color: var(--maroon-800);
   font-family: 'Cinzel', serif;
   font-weight: 700;
 }
 
 .mahavidya-meaning {
   margin: 0;
-  color: rgba(255,255,255,0.72);
+  color: #333333;
   font-size: 0.9rem;
   line-height: 1.8;
   letter-spacing: 0.025em;
@@ -178,30 +179,5 @@
   .mahavidya-meaning {
     min-height: auto;
     font-size: 0.85rem;
-  }
-}
-
-.marquee-track {
-  width: max-content;
-  animation: recognition-marquee 28s linear infinite;
-  will-change: transform;
-}
-
-.marquee-track:hover {
-  animation-play-state: paused;
-}
-
-@keyframes recognition-marquee {
-  0% {
-    transform: translate3d(0, 0, 0);
-  }
-  100% {
-    transform: translate3d(-50%, 0, 0);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .marquee-track {
-    animation: none !important;
   }
 }
