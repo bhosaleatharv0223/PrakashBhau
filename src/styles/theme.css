@@ -42,18 +42,12 @@
   --maroon-950: #2c0206;
   --maroon-800: #581214;
   --saffron: #E8622C;
-  --navbar-height: 80px;
-  --navbar-height-mobile: 88px;
   --gold: #C9A227;
   --cream: #F8E5A4;
   --font-dev: 'Noto Serif Devanagari', serif;
 }
 
-@media (max-width: 1024px) {
-  :root {
-    --navbar-height: var(--navbar-height-mobile);
-  }
-}
+
 
 .dark {
   --background: oklch(0.145 0 0);

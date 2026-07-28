@@ -9,6 +9,7 @@ import {
   Globe, ExternalLink, Sparkles, Sun, Zap,
   CheckCircle,
 } from "lucide-react";
+import RecognitionPage from "./RecognitionPage";
 
 const PHONE = "9960227894";
 const WHATSAPP_LINK = `https://wa.me/91${PHONE}`;
@@ -140,6 +141,7 @@ const achievements = [
 
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [currentPath, setCurrentPath] = useState(window.location.pathname || "/");
   const [navVariant, setNavVariant] = useState<"default" | "hidden" | "floating">("default");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -201,9 +203,23 @@ export default function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const onPop = () => setCurrentPath(window.location.pathname || "/");
+    window.addEventListener("popstate", onPop);
+    return () => window.removeEventListener("popstate", onPop);
+  }, []);
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
+  };
+
+  const navigateTo = (path: string) => {
+    if (path === window.location.pathname) return;
+    window.history.pushState({}, "", path);
+    setCurrentPath(path);
+    setIsMenuOpen(false);
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -220,6 +236,7 @@ export default function App() {
     { label: "Who I Am", id: "who-i-am" },
     { label: "What I Think", id: "what-i-think" },
     { label: "What I Do", id: "what-i-do" },
+    { label: "Recognition", path: "/recognition" },
     { label: "Philosophy", href: "/philosophy.html" },
   ];
 
@@ -254,7 +271,7 @@ export default function App() {
               ? "sticky top-3 bg-transparent overflow-visible"
               : "sticky top-0 pointer-events-none opacity-0 -translate-y-6 overflow-visible"
         }`}
-        style={{ height: "var(--navbar-height)", borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
+        style={{ height: "80px", borderBottom: navVariant === "default" ? "1px solid rgba(201,162,39,0.2)" : "1px solid transparent" }}
       >
         <nav className={`mx-auto px-4 sm:px-6 h-full flex items-center justify-between gap-4 transition-all duration-300 ease-[cubic-bezier(0.22,1,0.36,1)] transform-gpu ${
           navVariant === "floating"
@@ -276,17 +293,35 @@ export default function App() {
 
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-1">
-            {navLinks.map((item) => (
-              item.href ? (
-                <a
-                  key={item.label}
-                  href={item.href}
-                  className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
-                  style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
-                >
-                  {item.label}
-                </a>
-              ) : (
+            {navLinks.map((item) => {
+              const isActive = (item.path && currentPath === item.path) || false;
+              if (item.href) {
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
+                    style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
+                  >
+                    {item.label}
+                  </a>
+                );
+              }
+              if (item.path) {
+                return (
+                  <button
+                    key={item.path}
+                    onClick={() => navigateTo(item.path!)}
+                    className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide ${isActive ? "bg-[#5C1119]/6 text-[#5C1119]" : "text-[#241C1A]"}`}
+                    style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
+                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
+                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent"; }}
+                  >
+                    {item.label}
+                  </button>
+                );
+              }
+              return (
                 <button
                   key={item.id ?? item.label}
                   onClick={() => item.id ? scrollTo(item.id) : undefined}
@@ -297,8 +332,8 @@ export default function App() {
                 >
                   {item.label}
                 </button>
-              )
-            ))}
+              );
+            })}
           </div>
 
           {/* Right Actions */}
@@ -324,22 +359,32 @@ export default function App() {
         {/* Mobile Menu */}
         {isMenuOpen && (
           <div className="lg:hidden bg-white px-4 py-4 space-y-1" style={{ borderTop: "1px solid rgba(201,162,39,0.2)" }}>
-            {navLinks.map((item) => (
-              item.href ? (
-                <a key={item.label} href={item.href} className="block w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
-                  {item.label}
-                </a>
-              ) : (
+            {navLinks.map((item) => {
+              if (item.href) {
+                return (
+                  <a key={item.label} href={item.href} className="block w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                    {item.label}
+                  </a>
+                );
+              }
+              if (item.path) {
+                return (
+                  <button key={item.path} onClick={() => navigateTo(item.path!)} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                    {item.label}
+                  </button>
+                );
+              }
+              return (
                 <button key={item.id ?? item.label} onClick={() => item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
                   {item.label}
                 </button>
-              )
-            ))}
+              );
+            })}
             <div className="pt-3 border-t space-y-2" style={{ borderColor: "rgba(201,162,39,0.2)" }}>
               <a href={`tel:${PHONE}`} className="flex items-center gap-2 px-4 py-3 text-[#5C1119] font-medium" style={{ fontFamily: "'Cinzel', serif" }}>
                 <Phone className="w-4 h-4" /> {PHONE}
               </a>
-              <button onClick={() => { setIsBookingOpen(true); setIsMenuOpen(false); }} className="w-full py-3.5 text-white font-bold rounded-xl tracking-wider" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, var(--saffron), #D85A24)" }}>
+              <button onClick={() => { setIsBookingOpen(true); setIsMenuOpen(false); }} className="w-full py-3.5 text-white font-bold rounded-xl tracking-wider" style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)" }}>
                 Book Consultation
               </button>
             </div>
@@ -347,8 +392,12 @@ export default function App() {
         )}
       </header>
 
+      {currentPath === "/recognition" && (
+        <RecognitionPage heroRef={heroSectionRef} onNavigateRoute={navigateTo} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} activePath={currentPath} />
+      )}
+
       {/* ── Hero Section ── */}
-      <section id="hero" ref={heroSectionRef} className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden" style={{ paddingTop: "calc(var(--navbar-height) + 12px)" }}>
+      <section id="hero" ref={heroSectionRef} className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <picture>
             <source media="(max-width: 767px)" srcSet="/prakshbhau.jpeg" />
@@ -407,7 +456,7 @@ export default function App() {
                 <button
                   onClick={() => setIsBookingOpen(true)}
                   className="flex items-center gap-2 px-7 py-3.5 text-white font-bold rounded-full transition-all duration-200 text-sm tracking-[0.2em] hover:-translate-y-0.5"
-                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, var(--saffron), #D85A24)", boxShadow: "0 18px 45px rgba(232,98,44,0.28)" }}
+                  style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #F6A24E, #D85A24)", boxShadow: "0 18px 45px rgba(232,98,44,0.28)" }}
                 >
                   <Phone className="w-4 h-4" /> Book Consultation
                 </button>

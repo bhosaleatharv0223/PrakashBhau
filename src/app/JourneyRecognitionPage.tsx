@@ -142,7 +142,6 @@ export default function JourneyRecognitionPage({ onNavigateRoute, onOpenBooking,
           })}
         </div>
       </section>
-
       {/* Premium two-row trophy exhibit (completely new implementation) */}
       <PremiumTrophyExhibit />
 
