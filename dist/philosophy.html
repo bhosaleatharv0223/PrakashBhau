@@ -15,8 +15,27 @@
     <link rel="stylesheet" href="/philosophy.css" />
   </head>
   <body>
+    <!-- Language selection popup (site-wide) -->
+    <div class="lang-popup-overlay" id="langPopupOverlay" aria-hidden="true" role="dialog" aria-modal="true">
+      <div class="lang-popup-box" role="document" aria-labelledby="langPopupTitle">
+        <div class="lang-popup-icon">🕉️</div>
+        <h3 class="lang-popup-title" id="langPopupTitle">भाषा निवडा <span class="lang-popup-sub">Select Your Language</span></h3>
+        <p class="lang-popup-desc">कृपया आपली पसंतीची भाषा निवडा</p>
+        <div class="lang-popup-grid" role="list">
+          <button class="lang-option" data-lang="mr" type="button"><span class="lang-native">मराठी</span><span class="lang-en">Marathi</span></button>
+          <button class="lang-option" data-lang="hi" type="button"><span class="lang-native">हिन्दी</span><span class="lang-en">Hindi</span></button>
+          <button class="lang-option" data-lang="bn" type="button"><span class="lang-native">বাংলা</span><span class="lang-en">Bengali</span></button>
+          <button class="lang-option" data-lang="as" type="button"><span class="lang-native">অসমীয়া</span><span class="lang-en">Assamese</span></button>
+          <button class="lang-option" data-lang="en" type="button"><span class="lang-native">English</span><span class="lang-en">English</span></button>
+          <button class="lang-option" data-lang="ar" type="button"><span class="lang-native">العربية</span><span class="lang-en">Arabic</span></button>
+          <button class="lang-option" data-lang="ur" type="button"><span class="lang-native">اردو</span><span class="lang-en">Urdu</span></button>
+        </div>
+        <button class="lang-popup-close" id="langPopupClose" type="button">Continue in मराठी (Default) →</button>
+      </div>
+    </div>
     <div class="page-shell">
       <header class="page-header">
+        <div id="google_translate_element_left_static" class="google-translate-container google-translate-left notranslate" translate="no" aria-hidden="true"></div>
         <a class="brand" href="/">Home</a>
         <nav class="page-nav">
           <a href="#essence">Essence</a>
@@ -24,6 +43,7 @@
           <a href="#mahadivya">Mahavidya</a>
           <a href="#practice">Practice</a>
         </nav>
+        <div id="google_translate_element_static" class="google-translate-container notranslate" translate="no" aria-hidden="true"></div>
       </header>
 
       <main>
@@ -270,6 +290,87 @@
           spineFill.style.height = '100%';
         }
       })();
+      
+      /* Google Translate static init for this standalone page */
+      (function () {
+        function getGoogleTranslateCookieLang() {
+          const cookie = document.cookie.split('; ').find((entry) => entry.startsWith('googtrans='));
+          if (!cookie) return null;
+          const value = decodeURIComponent(cookie.split('=')[1] || '');
+          const parts = value.split('/').filter(Boolean);
+          return parts.length ? parts[parts.length - 1] : null;
+        }
+
+        function applyGoogleTranslateDirection() {
+          const lang = getGoogleTranslateCookieLang();
+          // Only act when a googtrans cookie exists (translation has been requested)
+          if (!lang) return;
+          try {
+            if (!window.__lastGTLang || window.__lastGTLang !== lang) {
+              console.debug('philosophy: googtrans cookie value:', lang);
+              window.__lastGTLang = lang;
+            }
+          } catch (e) {}
+          const isRtl = lang === 'ar' || lang === 'ur';
+          if (isRtl) {
+            document.documentElement.setAttribute('dir', 'rtl');
+            document.body.setAttribute('dir', 'rtl');
+            document.body.classList.add('rtl-translate');
+          } else {
+            document.documentElement.setAttribute('dir', 'ltr');
+            document.body.setAttribute('dir', 'ltr');
+            document.body.classList.remove('rtl-translate');
+          }
+        }
+
+        window.googleTranslateElementInit = function () {
+          if (!(window.google && window.google.translate)) return;
+          const config = {
+            pageLanguage: 'en',
+            includedLanguages: 'mr,hi,bn,as,en,ar,ur',
+            layout: google.translate.TranslateElement.InlineLayout.SIMPLE,
+            autoDisplay: false,
+          };
+          try {
+            new window.google.translate.TranslateElement(config, 'google_translate_element_left_static');
+          } catch (e) {
+            // ignore
+          }
+          applyGoogleTranslateDirection();
+        };
+
+        if (!document.getElementById('google-translate-script')) {
+          const s = document.createElement('script');
+          s.id = 'google-translate-script';
+          s.src = 'https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit';
+          s.async = true;
+          s.defer = true;
+          document.body.appendChild(s);
+        }
+
+        // Keep direction in sync if cookie changes (user switches language)
+        var _i = setInterval(applyGoogleTranslateDirection, 1500);
+        window.addEventListener('unload', function () { clearInterval(_i); });
+      })();
+
+    /* Language popup logic for philosophy page */
+    (function () {
+      const STORAGE_KEY = 'preferredSiteLanguage';
+      const overlay = document.getElementById('langPopupOverlay');
+      const closeBtn = document.getElementById('langPopupClose');
+      const options = document.querySelectorAll('.lang-option');
+      const reopenBtn = document.getElementById('reopenLangPopup');
+
+      function isLocalhost() { return /^(localhost|127\.|0:0:0:0:0:0:0:1)$/.test(window.location.hostname) || window.location.hostname === ''; }
+      function showPopupIfFirstVisit() { try { const saved = localStorage.getItem(STORAGE_KEY); if (!saved) { setTimeout(() => { overlay && overlay.classList.add('show'); overlay && overlay.setAttribute('aria-hidden','false'); }, 600); } else { if (saved && saved !== 'mr') { const value = '/mr/' + saved; document.cookie = 'googtrans=' + encodeURIComponent(value) + '; path=/'; } else { document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC'; } } } catch (e) { console.debug('lang-popup', e); } }
+      function hidePopup() { overlay && overlay.classList.remove('show'); overlay && overlay.setAttribute('aria-hidden','true'); }
+      options.forEach(btn => btn.addEventListener('click', function () { const lang = this.dataset.lang; hidePopup(); if (!lang) return; try { localStorage.setItem(STORAGE_KEY, lang); } catch (e) {} if (lang === 'mr') { document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC'; setTimeout(() => window.location.reload(),150); } else { const value = '/mr/' + lang; document.cookie = 'googtrans=' + encodeURIComponent(value) + '; path=/'; setTimeout(() => window.location.reload(),150); } }));
+      closeBtn && closeBtn.addEventListener('click', function () { try { localStorage.setItem(STORAGE_KEY,'mr'); } catch (e) {} hidePopup(); });
+      overlay && overlay.addEventListener('click', function (ev) { if (ev.target === overlay) { try { localStorage.setItem(STORAGE_KEY,'mr'); } catch (e) {} hidePopup(); } });
+      window.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && overlay && overlay.classList.contains('show')) { try { localStorage.setItem(STORAGE_KEY,'mr'); } catch (e) {} hidePopup(); } });
+      if (reopenBtn) reopenBtn.addEventListener('click', function () { overlay && overlay.classList.add('show'); overlay && overlay.setAttribute('aria-hidden','false'); });
+      window.addEventListener('load', showPopupIfFirstVisit);
+    })();
     </script>
   </body>
 </html>
