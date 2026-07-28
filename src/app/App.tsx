@@ -1,7 +1,10 @@
 import { useState, useEffect, useRef } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
 import logoImg from "@/imports/logo.png";
 import heroImg from "@/imports/Hero_section.jpeg";
+import RecognitionPage from "@/app/pages/RecognitionPage";
+import RecognitionGalleryPage from "@/app/pages/RecognitionGalleryPage";
 import {
   Phone, MessageCircle, Menu, X, ChevronDown,
   Star, Award, Users, Heart, BookOpen,
@@ -139,6 +142,8 @@ const achievements = [
 // ─── App ───────────────────────────────────────────────────────────────────────
 
 export default function App() {
+  const location = useLocation();
+  const navigate = useNavigate();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [navVariant, setNavVariant] = useState<"default" | "hidden" | "floating">("default");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
@@ -206,6 +211,15 @@ export default function App() {
     setIsMenuOpen(false);
   };
 
+  const handleNavigateRoute = (path: string) => {
+    setIsMenuOpen(false);
+    if (path.startsWith("/")) {
+      navigate(path);
+      return;
+    }
+    scrollTo(path);
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
@@ -220,8 +234,21 @@ export default function App() {
     { label: "Who I Am", id: "who-i-am" },
     { label: "What I Think", id: "what-i-think" },
     { label: "What I Do", id: "what-i-do" },
+    { label: "Recognition", path: "/recognition" },
     { label: "Philosophy", href: "/philosophy.html" },
   ];
+
+  if (location.pathname === "/recognition") {
+    return <RecognitionPage onNavigateRoute={handleNavigateRoute} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} whatsappLink={WHATSAPP_LINK} activePath={location.pathname} />;
+  }
+
+  if (location.pathname === "/recognition/gallery") {
+    return <RecognitionGalleryPage onNavigateRoute={handleNavigateRoute} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} whatsappLink={WHATSAPP_LINK} activePath={location.pathname} />;
+  }
+
+  if (location.pathname === "/journey-and-recognition") {
+    return <RecognitionPage onNavigateRoute={handleNavigateRoute} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} whatsappLink={WHATSAPP_LINK} activePath="/recognition" />;
+  }
 
   return (
     <div className="min-h-screen bg-[#FBF3E7] text-[#241C1A]" style={{ fontFamily: "'Poppins', sans-serif" }}>
@@ -289,7 +316,7 @@ export default function App() {
               ) : (
                 <button
                   key={item.id ?? item.label}
-                  onClick={() => item.id ? scrollTo(item.id) : undefined}
+                  onClick={() => item.path ? handleNavigateRoute(item.path) : item.id ? scrollTo(item.id) : undefined}
                   className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
                   style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
@@ -330,7 +357,7 @@ export default function App() {
                   {item.label}
                 </a>
               ) : (
-                <button key={item.id ?? item.label} onClick={() => item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                <button key={item.id ?? item.label} onClick={() => item.path ? handleNavigateRoute(item.path) : item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
                   {item.label}
                 </button>
               )
