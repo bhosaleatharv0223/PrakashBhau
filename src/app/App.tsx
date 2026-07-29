@@ -154,6 +154,7 @@ export default function App() {
   const [bookingForm, setBookingForm] = useState({
     name: "", phone: "", email: "", queryType: "", message: "",
   });
+  const [lastSubmittedForm, setLastSubmittedForm] = useState<typeof bookingForm | null>(null);
 
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const lastScrollYRef = useRef(0);
@@ -271,14 +272,27 @@ export default function App() {
     }
   };
 
+  const buildWhatsAppMessage = (form: typeof bookingForm) => {
+    const email = form.email.trim() || "N/A";
+    const message = form.message.trim() || "N/A";
+    return `Hello Guruvarya Team,\n\nConsultation request details:\nName: ${form.name.trim()}\nPhone: ${form.phone.trim()}\nEmail: ${email}\nConsultation Type: ${form.queryType.trim()}\nMessage: ${message}`;
+  };
+
+  const getWhatsAppUrl = (form: typeof bookingForm) => {
+    const encodedText = encodeURIComponent(buildWhatsAppMessage(form));
+    return `https://wa.me/91${PHONE}?text=${encodedText}`;
+  };
+
+  const handleSendWhatsApp = () => {
+    if (!lastSubmittedForm) return;
+    const whatsappUrl = getWhatsAppUrl(lastSubmittedForm);
+    window.open(whatsappUrl, "_blank");
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setFormSubmitted(true);
-    setTimeout(() => {
-      setFormSubmitted(false);
-      setIsBookingOpen(false);
-      setBookingForm({ name: "", phone: "", email: "", queryType: "", message: "" });
-    }, 3500);
+    setLastSubmittedForm(bookingForm);
   };
 
   const navLinks = [
@@ -1156,6 +1170,26 @@ export default function App() {
                   <CheckCircle className="mx-auto mb-5 w-16 h-16 text-[#C9A227]" />
                   <p className="font-bold text-[#5C1119] text-xl mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Namaskar!</p>
                   <p className="text-[#241C1A]/65 text-sm leading-7">Your consultation request has been received. Guruvarya's team will contact you within 24 hours to confirm your appointment.</p>
+                  {lastSubmittedForm && (
+                    <div className="mt-6 rounded-3xl border border-[#E4D7C5] bg-[#FFF8EE] p-4 text-[#241C1A]">
+                      <p className="font-semibold text-sm mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Review your WhatsApp details</p>
+                      <div className="space-y-2 text-sm leading-6">
+                        <p><span className="font-semibold">Name:</span> {lastSubmittedForm.name || "-"}</p>
+                        <p><span className="font-semibold">Phone:</span> {lastSubmittedForm.phone || "-"}</p>
+                        <p><span className="font-semibold">Email:</span> {lastSubmittedForm.email || "-"}</p>
+                        <p><span className="font-semibold">Consultation Type:</span> {lastSubmittedForm.queryType || "-"}</p>
+                        <p><span className="font-semibold">Message:</span> {lastSubmittedForm.message || "-"}</p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleSendWhatsApp}
+                        className="mt-4 w-full py-3 text-white font-bold rounded-2xl transition-all duration-200 text-sm tracking-widest shadow-xl"
+                        style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #25D366, #1DA851)", boxShadow: "0 6px 20px rgba(37,211,102,0.35)" }}
+                      >
+                        SEND VIA WHATSAPP
+                      </button>
+                    </div>
+                  )}
                 </div>
               ) : (
                 <>
