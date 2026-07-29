@@ -150,11 +150,9 @@ export default function App() {
   const [navVariant, setNavVariant] = useState<"default" | "hidden" | "floating">("default");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
-  const [formSubmitted, setFormSubmitted] = useState(false);
   const [bookingForm, setBookingForm] = useState({
     name: "", phone: "", email: "", queryType: "", message: "",
   });
-  const [lastSubmittedForm, setLastSubmittedForm] = useState<typeof bookingForm | null>(null);
 
   const heroSectionRef = useRef<HTMLElement | null>(null);
   const lastScrollYRef = useRef(0);
@@ -283,16 +281,12 @@ export default function App() {
     return `https://wa.me/91${PHONE}?text=${encodedText}`;
   };
 
-  const handleSendWhatsApp = () => {
-    if (!lastSubmittedForm) return;
-    const whatsappUrl = getWhatsAppUrl(lastSubmittedForm);
-    window.open(whatsappUrl, "_blank");
-  };
-
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    setFormSubmitted(true);
-    setLastSubmittedForm(bookingForm);
+    const whatsappUrl = getWhatsAppUrl(bookingForm);
+    window.open(whatsappUrl, "_blank");
+    setBookingForm({ name: "", phone: "", email: "", queryType: "", message: "" });
+    setIsBookingOpen(false);
   };
 
   const navLinks = [
@@ -1165,116 +1159,86 @@ export default function App() {
             </div>
 
             <form onSubmit={handleSubmit} className="px-8 py-7 space-y-5">
-              {formSubmitted ? (
-                <div className="text-center py-10">
-                  <CheckCircle className="mx-auto mb-5 w-16 h-16 text-[#C9A227]" />
-                  <p className="font-bold text-[#5C1119] text-xl mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Namaskar!</p>
-                  <p className="text-[#241C1A]/65 text-sm leading-7">Your consultation request has been received. Guruvarya's team will contact you within 24 hours to confirm your appointment.</p>
-                  {lastSubmittedForm && (
-                    <div className="mt-6 rounded-3xl border border-[#E4D7C5] bg-[#FFF8EE] p-4 text-[#241C1A]">
-                      <p className="font-semibold text-sm mb-3" style={{ fontFamily: "'Cinzel', serif" }}>Review your WhatsApp details</p>
-                      <div className="space-y-2 text-sm leading-6">
-                        <p><span className="font-semibold">Name:</span> {lastSubmittedForm.name || "-"}</p>
-                        <p><span className="font-semibold">Phone:</span> {lastSubmittedForm.phone || "-"}</p>
-                        <p><span className="font-semibold">Email:</span> {lastSubmittedForm.email || "-"}</p>
-                        <p><span className="font-semibold">Consultation Type:</span> {lastSubmittedForm.queryType || "-"}</p>
-                        <p><span className="font-semibold">Message:</span> {lastSubmittedForm.message || "-"}</p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={handleSendWhatsApp}
-                        className="mt-4 w-full py-3 text-white font-bold rounded-2xl transition-all duration-200 text-sm tracking-widest shadow-xl"
-                        style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #25D366, #1DA851)", boxShadow: "0 6px 20px rgba(37,211,102,0.35)" }}
-                      >
-                        SEND VIA WHATSAPP
-                      </button>
-                    </div>
-                  )}
+              <div>
+                <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Full Name *</label>
+                <input
+                  required
+                  value={bookingForm.name}
+                  onChange={e => setBookingForm(f => ({ ...f, name: e.target.value }))}
+                  className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
+                  style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                  placeholder="Your full name"
+                  onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(92,17,25,0.08)"; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; e.currentTarget.style.boxShadow = "none"; }}
+                />
+              </div>
+              <div className="grid grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Phone *</label>
+                  <input
+                    required
+                    value={bookingForm.phone}
+                    onChange={e => setBookingForm(f => ({ ...f, phone: e.target.value }))}
+                    className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
+                    style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                    placeholder="Mobile number"
+                    onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
+                  />
                 </div>
-              ) : (
-                <>
-                  <div>
-                    <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Full Name *</label>
-                    <input
-                      required
-                      value={bookingForm.name}
-                      onChange={e => setBookingForm(f => ({ ...f, name: e.target.value }))}
-                      className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
-                      style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
-                      placeholder="Your full name"
-                      onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; e.currentTarget.style.boxShadow = "0 0 0 3px rgba(92,17,25,0.08)"; }}
-                      onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; e.currentTarget.style.boxShadow = "none"; }}
-                    />
-                  </div>
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Phone *</label>
-                      <input
-                        required
-                        value={bookingForm.phone}
-                        onChange={e => setBookingForm(f => ({ ...f, phone: e.target.value }))}
-                        className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
-                        style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
-                        placeholder="Mobile number"
-                        onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
-                        onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Email</label>
-                      <input
-                        value={bookingForm.email}
-                        onChange={e => setBookingForm(f => ({ ...f, email: e.target.value }))}
-                        className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
-                        style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
-                        placeholder="Email address"
-                        onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
-                        onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
-                      />
-                    </div>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Consultation Type *</label>
-                    <select
-                      required
-                      value={bookingForm.queryType}
-                      onChange={e => setBookingForm(f => ({ ...f, queryType: e.target.value }))}
-                      className="w-full px-4 py-3.5 rounded-xl text-sm outline-none bg-[#FAFAFA]"
-                      style={{ border: "1.5px solid rgba(92,17,25,0.15)" }}
-                    >
-                      <option value="">Select type</option>
-                      <option>Astrology Consultation</option>
-                      <option>Spiritual Counselling</option>
-                      <option>Hanuman Upasana Guidance</option>
-                      <option>Dasha Mahavidya Sadhana</option>
-                      <option>Personal Blessings (Ashirwad)</option>
-                      <option>Trust Donation / Contribution</option>
-                      <option>Other</option>
-                    </select>
-                  </div>
-                  <div>
-                    <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Message</label>
-                    <textarea
-                      value={bookingForm.message}
-                      onChange={e => setBookingForm(f => ({ ...f, message: e.target.value }))}
-                      rows={3}
-                      className="w-full px-4 py-3.5 rounded-xl text-sm outline-none resize-none"
-                      style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
-                      placeholder="Briefly describe your query or what you seek guidance on..."
-                      onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
-                      onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
-                    />
-                  </div>
-                  <button
-                    type="submit"
-                    className="w-full py-4 text-white font-bold rounded-2xl transition-all duration-200 text-sm tracking-widest shadow-xl"
-                    style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 6px 20px rgba(232,98,44,0.35)" }}
-                  >
-                    SUBMIT REQUEST
-                  </button>
-                  <p className="text-center text-[#241C1A]/40 text-xs">We will contact you within 24 hours to confirm your appointment.</p>
-                </>
-              )}
+                <div>
+                  <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Email</label>
+                  <input
+                    value={bookingForm.email}
+                    onChange={e => setBookingForm(f => ({ ...f, email: e.target.value }))}
+                    className="w-full px-4 py-3.5 rounded-xl text-sm transition-all outline-none"
+                    style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                    placeholder="Email address"
+                    onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
+                    onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Consultation Type *</label>
+                <select
+                  required
+                  value={bookingForm.queryType}
+                  onChange={e => setBookingForm(f => ({ ...f, queryType: e.target.value }))}
+                  className="w-full px-4 py-3.5 rounded-xl text-sm outline-none bg-[#FAFAFA]"
+                  style={{ border: "1.5px solid rgba(92,17,25,0.15)" }}
+                >
+                  <option value="">Select type</option>
+                  <option>Astrology Consultation</option>
+                  <option>Spiritual Counselling</option>
+                  <option>Hanuman Upasana Guidance</option>
+                  <option>Dasha Mahavidya Sadhana</option>
+                  <option>Personal Blessings (Ashirwad)</option>
+                  <option>Trust Donation / Contribution</option>
+                  <option>Other</option>
+                </select>
+              </div>
+              <div>
+                <label className="block text-xs font-bold tracking-wider text-[#5C1119] mb-2" style={{ fontFamily: "'Cinzel', serif" }}>Message</label>
+                <textarea
+                  value={bookingForm.message}
+                  onChange={e => setBookingForm(f => ({ ...f, message: e.target.value }))}
+                  rows={3}
+                  className="w-full px-4 py-3.5 rounded-xl text-sm outline-none resize-none"
+                  style={{ border: "1.5px solid rgba(92,17,25,0.15)", background: "#FAFAFA" }}
+                  placeholder="Briefly describe your query or what you seek guidance on..."
+                  onFocus={e => { e.currentTarget.style.borderColor = "#5C1119"; }}
+                  onBlur={e => { e.currentTarget.style.borderColor = "rgba(92,17,25,0.15)"; }}
+                />
+              </div>
+              <button
+                type="submit"
+                className="w-full py-4 text-white font-bold rounded-2xl transition-all duration-200 text-sm tracking-widest shadow-xl"
+                style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 6px 20px rgba(232,98,44,0.35)" }}
+              >
+                SUBMIT REQUEST
+              </button>
+              <p className="text-center text-[#241C1A]/40 text-xs">We will contact you within 24 hours to confirm your appointment.</p>
             </form>
           </div>
         </div>
