@@ -1,19 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { Camera, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { ImageWithFallback } from "@/app/components/figma/ImageWithFallback";
-import GlobalNav from "@/app/components/GlobalNav";
 
 type RecognitionGalleryPageProps = Readonly<{
   onNavigateRoute: (path: string) => void;
   onOpenBooking: () => void;
-  phone: string;
-  activePath: string;
 }>;
-
-const recognitionNavItems = [
-  { label: "Home", path: "/" },
-  { label: "Recognition", path: "/recognition" },
-];
 
 const certificateUrls = [
   "/certificates/20260713_152755.jpg.jpeg",
@@ -44,7 +36,7 @@ const certificateUrls = [
   "/certificates/20260713_155157.jpg.jpeg",
 ];
 
-export default function RecognitionGalleryPage({ onNavigateRoute, onOpenBooking, phone, activePath }: RecognitionGalleryPageProps) {
+export default function RecognitionGalleryPage({ onNavigateRoute, onOpenBooking }: RecognitionGalleryPageProps) {
   const [activeIndex, setActiveIndex] = useState<number | null>(null);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -72,8 +64,6 @@ export default function RecognitionGalleryPage({ onNavigateRoute, onOpenBooking,
 
   return (
     <main className="min-h-screen bg-[#fcf7ef] text-[#241c1a]" style={{ fontFamily: "'Poppins', sans-serif" }}>
-      <GlobalNav navItems={recognitionNavItems} onNavigateRoute={onNavigateRoute} onScrollTo={() => undefined} onOpenBooking={onOpenBooking} phone={phone} activePath={activePath} />
-
       <section className="relative overflow-hidden bg-[#F7EFE1]">
         <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(255,226,172,0.45),_transparent_25%),linear-gradient(180deg,_rgba(217,172,95,0.08),_transparent_60%)]" />
         <div className="relative mx-auto max-w-7xl px-4 py-20 sm:px-6 lg:px-8">
