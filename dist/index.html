@@ -10,13 +10,122 @@
       <meta name="robots" content="noindex, nofollow" />
       <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
       
-      <script type="module" crossorigin src="/assets/index-GrfaVM9j.js"></script>
-      <link rel="stylesheet" crossorigin href="/assets/index-Bnjae_lm.css">
+      <script type="module" crossorigin src="/assets/index-BGVJhSHx.js"></script>
+      <link rel="stylesheet" crossorigin href="/assets/index-UbCM80fL.css">
     </head>
 
     <body>
+      <!-- Language selection popup (shows once per visitor) -->
+      <div class="lang-popup-overlay" id="langPopupOverlay" aria-hidden="true" role="dialog" aria-modal="true">
+        <div class="lang-popup-box" role="document" aria-labelledby="langPopupTitle">
+          <div class="lang-popup-icon">🕉️</div>
+          <h3 class="lang-popup-title" id="langPopupTitle">
+            भाषा निवडा <span class="lang-popup-sub">Select Your Language</span>
+          </h3>
+          <p class="lang-popup-desc">कृपया आपली पसंतीची भाषा निवडा</p>
+
+          <div class="lang-popup-grid" role="list">
+            <button class="lang-option" data-lang="mr" type="button"><span class="lang-native">मराठी</span><span class="lang-en">Marathi</span></button>
+            <button class="lang-option" data-lang="hi" type="button"><span class="lang-native">हिन्दी</span><span class="lang-en">Hindi</span></button>
+            <button class="lang-option" data-lang="bn" type="button"><span class="lang-native">বাংলা</span><span class="lang-en">Bengali</span></button>
+            <button class="lang-option" data-lang="as" type="button"><span class="lang-native">অসমীয়া</span><span class="lang-en">Assamese</span></button>
+            <button class="lang-option" data-lang="en" type="button"><span class="lang-native">English</span><span class="lang-en">English</span></button>
+            <button class="lang-option" data-lang="ar" type="button"><span class="lang-native">العربية</span><span class="lang-en">Arabic</span></button>
+            <button class="lang-option" data-lang="ur" type="button"><span class="lang-native">اردو</span><span class="lang-en">Urdu</span></button>
+          </div>
+
+          <button class="lang-popup-close" id="langPopupClose" type="button">Continue in मराठी (Default) →</button>
+        </div>
+      </div>
       
       <div id="root"></div>
+
+      <!-- Language popup logic (IIFE) -->
+      <script id="lang-popup-script">
+      (function () {
+        const STORAGE_KEY = 'preferredSiteLanguage';
+        const overlay = document.getElementById('langPopupOverlay');
+        const closeBtn = document.getElementById('langPopupClose');
+        const options = document.querySelectorAll('.lang-option');
+        const reopenBtn = document.getElementById('reopenLangPopup');
+
+        function isLocalhost() {
+          return /^(localhost|127\.|0:0:0:0:0:0:0:1)$/.test(window.location.hostname) || window.location.hostname === '';
+        }
+
+        function showPopupIfFirstVisit() {
+          try {
+            const saved = localStorage.getItem(STORAGE_KEY);
+            if (!saved) {
+              setTimeout(() => {
+                overlay && overlay.classList.add('show');
+                overlay && overlay.setAttribute('aria-hidden', 'false');
+              }, 600);
+            } else {
+              if (saved && saved !== 'mr') applyGoogTrans(saved);
+              else clearGoogTransCookie();
+            }
+          } catch (e) { console.debug('lang-popup error', e); }
+        }
+
+        function hidePopup() {
+          overlay && overlay.classList.remove('show');
+          overlay && overlay.setAttribute('aria-hidden', 'true');
+        }
+
+        function setCookie(name, value, days, opts = {}) {
+          const expires = days ? '; expires=' + new Date(Date.now() + days * 864e5).toUTCString() : '';
+          let cookie = name + '=' + encodeURIComponent(value) + '; path=/' + expires + '; SameSite=Lax';
+          if (opts.domain) cookie += '; domain=' + opts.domain;
+          document.cookie = cookie;
+        }
+
+        function clearGoogTransCookie() {
+          document.cookie = 'googtrans=; path=/; expires=Thu, 01 Jan 1970 00:00:00 UTC';
+        }
+
+        function applyGoogTrans(langCode) {
+          const value = '/mr/' + langCode;
+          try {
+            if (!isLocalhost()) {
+              const hostParts = window.location.hostname.split('.');
+              if (hostParts.length >= 2) {
+                const domain = '.' + hostParts.slice(-2).join('.');
+                setCookie('googtrans', value, 365, { domain });
+              } else setCookie('googtrans', value, 365);
+            } else setCookie('googtrans', value, 365);
+          } catch (e) { setCookie('googtrans', value, 365); }
+        }
+
+        function triggerGoogleTranslate(langCode) {
+          try {
+            localStorage.setItem(STORAGE_KEY, langCode);
+            if (langCode === 'mr') { clearGoogTransCookie(); window.location.reload(); }
+            else { applyGoogTrans(langCode); window.location.reload(); }
+          } catch (e) { console.debug('lang-popup trigger failed', e); window.location.reload(); }
+        }
+
+        options.forEach(btn => {
+          btn.addEventListener('click', function () {
+            const lang = this.dataset.lang;
+            hidePopup();
+            if (!lang) return;
+            if (lang === 'mr') { try { localStorage.setItem(STORAGE_KEY, 'mr'); } catch (e) {} clearGoogTransCookie(); setTimeout(() => window.location.reload(), 150); }
+            else triggerGoogleTranslate(lang);
+          });
+        });
+
+        closeBtn && closeBtn.addEventListener('click', function () { try { localStorage.setItem(STORAGE_KEY, 'mr'); } catch (e) {} hidePopup(); });
+
+        overlay && overlay.addEventListener('click', function (ev) { if (ev.target === overlay) { try { localStorage.setItem(STORAGE_KEY, 'mr'); } catch (e) {} hidePopup(); } });
+
+        window.addEventListener('keydown', function (ev) { if (ev.key === 'Escape' && overlay && overlay.classList.contains('show')) { try { localStorage.setItem(STORAGE_KEY, 'mr'); } catch (e) {} hidePopup(); } });
+
+        if (reopenBtn) reopenBtn.addEventListener('click', function () { overlay && overlay.classList.add('show'); overlay && overlay.setAttribute('aria-hidden', 'false'); });
+
+        window.addEventListener('load', showPopupIfFirstVisit);
+      })();
+      </script>
       
     </body>
   </html>

@@ -11,6 +11,9 @@ import {
   CheckCircle,
 } from "lucide-react";
 import RecognitionPage from "./RecognitionPage";
+import RecognitionGalleryPage from "./pages/RecognitionGalleryPage";
+import DignitariesGalleryPage from "./DignitariesGalleryPage";
+import DivineMomentsGalleryPage from "./DivineMomentsGalleryPage";
 
 const PHONE = "9960227894";
 const WHATSAPP_LINK = `https://wa.me/91${PHONE}`;
@@ -143,6 +146,7 @@ const achievements = [
 export default function App() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [currentPath, setCurrentPath] = useState(window.location.pathname || "/");
+  const [pendingScrollTarget, setPendingScrollTarget] = useState<string | null>(null);
   const [navVariant, setNavVariant] = useState<"default" | "hidden" | "floating">("default");
   const [isBookingOpen, setIsBookingOpen] = useState(false);
   const [activeFaq, setActiveFaq] = useState<number | null>(null);
@@ -210,17 +214,61 @@ export default function App() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
+  useEffect(() => {
+    if (pendingScrollTarget && currentPath === "/") {
+      document.getElementById(pendingScrollTarget)?.scrollIntoView({ behavior: "smooth" });
+      setPendingScrollTarget(null);
+      setIsMenuOpen(false);
+    }
+  }, [currentPath, pendingScrollTarget]);
+
+  const scrollToTopSmooth = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: "smooth" });
+  };
+
   const scrollTo = (id: string) => {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth" });
     setIsMenuOpen(false);
   };
 
+  const handleNavItem = (item: { label: string; id?: string; path?: string; href?: string }) => {
+    if (item.path) {
+      if (item.path === "/recognition" && currentPath === "/recognition") {
+        scrollToTopSmooth();
+        setIsMenuOpen(false);
+        return;
+      }
+      if (item.path === "/" && currentPath === "/") {
+        scrollToTopSmooth();
+        setIsMenuOpen(false);
+        return;
+      }
+      navigateTo(item.path);
+      return;
+    }
+    if (item.id) {
+      if (currentPath !== "/") {
+        setPendingScrollTarget(item.id);
+        navigateTo("/");
+      } else {
+        scrollTo(item.id);
+      }
+    }
+  };
+
   const navigateTo = (path: string) => {
-    if (path === window.location.pathname) return;
+    if (path === window.location.pathname) {
+      if (path === "/" || path === "/recognition" || path.startsWith("/recognition/")) {
+        scrollToTopSmooth();
+      }
+      return;
+    }
     window.history.pushState({}, "", path);
     setCurrentPath(path);
     setIsMenuOpen(false);
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    if (path === "/" || path === "/recognition" || path.startsWith("/recognition/")) {
+      scrollToTopSmooth();
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -234,6 +282,7 @@ export default function App() {
   };
 
   const navLinks = [
+    { label: "Home", path: "/" },
     { label: "Who I Am", id: "who-i-am" },
     { label: "What I Think", id: "what-i-think" },
     { label: "What I Do", id: "what-i-do" },
@@ -241,13 +290,15 @@ export default function App() {
     { label: "Philosophy", href: "/philosophy.html" },
   ];
 
+  const isRecognitionRoute = currentPath === "/recognition" || currentPath.startsWith("/recognition/");
+
   return (
     <div className="min-h-screen bg-[#F7A93F] text-[#241C1A]" style={{ fontFamily: "'Poppins', sans-serif" }}>
 
       {/* ── Announcement Bar ── */}
       <div className="bg-[#5C1119] text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 flex-wrap text-xs sm:text-sm">
-          <span className="text-[#C9A227] hidden sm:inline" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>ॐ ॥ जय श्री राम ॥ ॐ</span>
+          <span className="text-[#C9A227] hidden sm:inline" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>ॐ</span>
           <span className="flex-1 text-center text-white/80">
             <span className="text-[#C9A227]"> • </span>
             14 वर्षांची श्री हनुमान उपासना
@@ -280,7 +331,7 @@ export default function App() {
             : "max-w-7xl rounded-none"
         }`}>
           {/* Logo */}
-          <button onClick={() => scrollTo("hero")} className="flex items-center gap-3 sm:gap-4 md:gap-5 flex-shrink-0 group mr-2 sm:mr-3 lg:mr-6 min-h-[72px]" style={{ overflow: "visible" }}>
+          <button onClick={() => navigateTo("/")} className="flex items-center gap-3 sm:gap-4 md:gap-5 flex-shrink-0 group mr-2 sm:mr-3 lg:mr-6 min-h-[72px]" style={{ overflow: "visible" }}>
             <div className="relative -mt-1 -mb-1 w-[56px] h-[56px] sm:w-[72px] sm:h-[72px] rounded-full overflow-hidden flex-shrink-0 transition-all duration-200 group-hover:scale-105" style={{ border: "3.25px solid #E8622C", boxShadow: "0 0 0 4px rgba(201,162,39,0.24), 0 14px 32px rgba(92,17,25,0.16)" }}>
               <ImageWithFallback src={logoImg} alt="Guruvarya Shri Prakashbhau Shinde" className="w-full h-full object-cover" />
             </div>
@@ -295,7 +346,11 @@ export default function App() {
           {/* Desktop Nav Links */}
           <div className="hidden lg:flex items-center gap-1">
             {navLinks.map((item) => {
-              const isActive = (item.path && currentPath === item.path) || false;
+              const isActive = item.path
+                ? item.path === "/"
+                  ? currentPath === "/"
+                  : currentPath.startsWith(item.path)
+                : false;
               if (item.href) {
                 return (
                   <a
@@ -308,25 +363,11 @@ export default function App() {
                   </a>
                 );
               }
-              if (item.path) {
-                return (
-                  <button
-                    key={item.path}
-                    onClick={() => navigateTo(item.path!)}
-                    className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide ${isActive ? "bg-[#5C1119]/6 text-[#5C1119]" : "text-[#241C1A]"}`}
-                    style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
-                    onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
-                    onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent"; }}
-                  >
-                    {item.label}
-                  </button>
-                );
-              }
               return (
                 <button
-                  key={item.id ?? item.label}
-                  onClick={() => item.id ? scrollTo(item.id) : undefined}
-                  className="px-5 py-2.5 text-sm font-semibold text-[#241C1A] rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide"
+                  key={item.label}
+                  onClick={() => handleNavItem(item)}
+                  className={`px-5 py-2.5 text-sm font-semibold rounded-lg transition-all duration-200 hover:text-[#5C1119] hover:bg-[#5C1119]/5 tracking-wide ${isActive ? "bg-[#5C1119]/6 text-[#5C1119]" : "text-[#241C1A]"}`}
                   style={{ fontFamily: "'Cinzel', serif", border: "1px solid transparent" }}
                   onMouseEnter={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "rgba(201,162,39,0.3)"; }}
                   onMouseLeave={e => { (e.currentTarget as HTMLButtonElement).style.borderColor = "transparent"; }}
@@ -335,20 +376,6 @@ export default function App() {
                 </button>
               );
             })}
-          </div>
-
-          {/* Right Actions */}
-          <div className="hidden lg:flex items-center gap-4">
-            <a href={`tel:${PHONE}`} className="flex items-center gap-1.5 text-sm font-medium text-[#5C1119] hover:text-[#E8622C] transition-colors" style={{ fontFamily: "'Cinzel', serif" }}>
-              <Phone className="w-4 h-4" /> {PHONE}
-            </a>
-            <button
-              onClick={() => setIsBookingOpen(true)}
-              className="px-5 py-2.5 text-white text-sm font-bold rounded-xl transition-all duration-200 shadow-md hover:shadow-xl tracking-wider"
-              style={{ fontFamily: "'Cinzel', serif", background: "linear-gradient(135deg, #E8622C, #C9422C)", boxShadow: "0 4px 15px rgba(232,98,44,0.35)" }}
-            >
-              Book Consultation
-            </button>
           </div>
 
           {/* Mobile Hamburger */}
@@ -368,15 +395,8 @@ export default function App() {
                   </a>
                 );
               }
-              if (item.path) {
-                return (
-                  <button key={item.path} onClick={() => navigateTo(item.path!)} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
-                    {item.label}
-                  </button>
-                );
-              }
               return (
-                <button key={item.id ?? item.label} onClick={() => item.id ? scrollTo(item.id) : undefined} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
+                <button key={item.label} onClick={() => handleNavItem(item)} className="w-full text-left px-4 py-3 rounded-xl text-[#241C1A] hover:text-[#5C1119] hover:bg-[#FBF3E7] transition-colors font-semibold" style={{ fontFamily: "'Cinzel', serif" }}>
                   {item.label}
                 </button>
               );
@@ -393,11 +413,19 @@ export default function App() {
         )}
       </header>
 
-      {currentPath === "/recognition" && (
+      {currentPath === "/recognition/gallery" || currentPath === "/recognition/honours-gallery" ? (
+        <RecognitionGalleryPage onNavigateRoute={navigateTo} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} activePath={currentPath} />
+      ) : currentPath === "/recognition/dignitaries" ? (
+        <DignitariesGalleryPage onNavigateRoute={navigateTo} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} />
+      ) : currentPath === "/recognition/divine-moments" ? (
+        <DivineMomentsGalleryPage onNavigateRoute={navigateTo} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} />
+      ) : isRecognitionRoute ? (
         <RecognitionPage heroRef={heroSectionRef} onNavigateRoute={navigateTo} onOpenBooking={() => setIsBookingOpen(true)} phone={PHONE} activePath={currentPath} />
-      )}
+      ) : null}
 
-      {/* ── Hero Section ── */}
+      {!isRecognitionRoute && (
+        <>
+          {/* ── Hero Section ── */}
       <section id="hero" ref={heroSectionRef} className="relative min-h-[100vh] lg:min-h-[110vh] flex items-center overflow-hidden">
         <div className="absolute inset-0">
           <picture>
@@ -425,7 +453,6 @@ export default function App() {
             <div className="text-white space-y-7">
               <div className="flex items-center gap-3">
                 <span className="w-10 h-px bg-[#C9A227]" />
-                <span className="text-[#C9A227] text-base tracking-[0.2em]" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>॥ जय श्री राम ॥</span>
                 <span className="w-10 h-px bg-[#C9A227]" />
               </div>
 
@@ -1075,31 +1102,36 @@ export default function App() {
               © 2025 Guruvarya Shri Prakashbhau Shinde. All rights reserved.
             </p>
             <p className="text-white/25 text-xs" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>
-              ॐ नमः शिवाय ॥ जय श्री राम ॥ जय हनुमान
+              ॐ नमः शिवाय
             </p>
           </div>
         </div>
       </footer>
+        </>
+      )}
 
       {/* ── Floating WhatsApp ── */}
       <a
         href={WHATSAPP_LINK}
         target="_blank"
-        rel="noreferrer"
+        rel="noopener noreferrer"
+        aria-label="Chat on WhatsApp"
         title="Chat on WhatsApp"
-        className="fixed bottom-6 right-6 z-50 w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-200"
-        style={{ background: 'transparent', boxShadow: '0 6px 18px rgba(0,0,0,0.16)' }}
+        className="fixed bottom-4 right-4 z-[9999] flex h-14 w-14 items-center justify-center rounded-full bg-[#25D366] text-white shadow-[0_18px_55px_rgba(37,211,102,0.35)] transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#25D366] sm:bottom-6 sm:right-6"
       >
-        <img src="/whatsapp-logo.png" alt="WhatsApp" className="w-9 h-9 object-contain" />
+        <svg viewBox="0 0 24 24" className="h-8 w-8" fill="currentColor" aria-hidden="true">
+          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.472-.148-.672.149-.198.297-.767.966-.94 1.163-.173.198-.347.223-.644.075-1.758-.867-2.903-1.534-4.077-3.494-.306-.527.306-.49.882-1.626.099-.198.05-.372-.025-.52-.075-.149-.672-1.612-.922-2.21-.242-.579-.487-.5-.672-.51-.173-.007-.372-.009-.571-.009s-.52.075-.792.372c-.273.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.876 1.213 3.074.149.198 2.095 3.2 5.077 4.487.71.306 1.262.489 1.693.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.007-1.413.248-.695.248-1.29.173-1.413-.075-.122-.273-.198-.57-.347m-5.41 7.138h-.001a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.01.792.804-2.945-.235-.374A9.864 9.864 0 0 1 1.69 11.38a9.876 9.876 0 0 1 9.868-9.877c2.64 0 5.12 1.03 6.989 2.899a9.863 9.863 0 0 1 2.9 6.988 9.877 9.877 0 0 1-9.884 9.879m8.413-18.29A11.815 11.815 0 0 0 12.03 0C5.39 0 .09 5.29.09 11.92c0 2.099.548 4.154 1.588 5.97L0 24l6.31-1.656a11.9 11.9 0 0 0 5.694 1.475h.005c6.63 0 11.92-5.29 11.92-11.92 0-3.181-1.24-6.167-3.481-8.422" />
+        </svg>
       </a>
 
       {/* ── Sticky mobile call button ── */}
       <a
         href={`tel:${PHONE}`}
-        className="fixed bottom-6 left-6 z-50 lg:hidden w-14 h-14 rounded-full flex items-center justify-center shadow-2xl hover:scale-110 transition-transform duration-200"
-        style={{ background: "#5C1119", border: "2px solid #C9A227" }}
+        aria-label="Call us"
+        title="Call us"
+        className="fixed bottom-4 left-4 z-50 lg:hidden flex h-14 w-14 items-center justify-center rounded-full bg-[#5C1119] border-2 border-[#C9A227] text-[#C9A227] shadow-[0_18px_55px_rgba(92,17,25,0.35)] transition-transform duration-200 hover:scale-105 focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-[#5C1119]"
       >
-        <Phone className="w-6 h-6 text-[#C9A227]" />
+        <Phone className="w-6 h-6" />
       </a>
 
       {/* ── Booking Modal ── */}

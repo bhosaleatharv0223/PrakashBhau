@@ -5,7 +5,7 @@ import { recognitionGalleryPreviewItems } from "@/data/recognition-gallery";
 import { dignitariesGalleryPreviewItems } from "@/data/dignitaries-gallery";
 import { divineMomentsGalleryPreviewItems } from "@/data/divine-moments-gallery";
 
-export default function RecognitionPage({ heroRef, onNavigateRoute, onOpenBooking, phone, activePath }: { heroRef?: React.RefObject<HTMLElement>; onNavigateRoute: (p: string) => void; onOpenBooking: () => void; phone: string; activePath?: string }) {
+export default function RecognitionPage({ heroRef, onNavigateRoute, onOpenBooking, phone, activePath }: { heroRef?: React.RefObject<HTMLElement | null>; onNavigateRoute: (p: string) => void; onOpenBooking: () => void; phone: string; activePath?: string }) {
   return (
     <main className="min-h-screen bg-[#FBF3E7] text-[#241C1A]" style={{ fontFamily: "'Poppins', sans-serif" }}>
       <section aria-label="Recognition hero" ref={heroRef} className="relative w-full min-h-screen flex items-center justify-center overflow-hidden bg-center bg-cover" style={{ backgroundImage: "url('/WhatsApp Image 2026-07-13 at 5.40.35 PM.jpeg')" }}>

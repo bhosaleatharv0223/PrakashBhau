@@ -109,7 +109,7 @@ export default function GlobalNav({
       {/* Announcement bar (maroon) */}
       <div className="bg-[#5C1119] text-white py-2 px-4">
         <div className="max-w-7xl mx-auto flex items-center justify-between gap-2 flex-wrap text-xs sm:text-sm">
-          <span className="text-[#C9A227] hidden sm:inline" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>ॐ ॥ जय श्री राम ॥ ॐ</span>
+          <span className="text-[#C9A227] hidden sm:inline" style={{ fontFamily: "'Noto Serif Devanagari', serif" }}>ॐ</span>
           <span className="flex-1 text-center text-white/80">
             <span className="text-[#C9A227]"> • </span>
             14 वर्षांची श्री हनुमान उपासना
